@@ -3,13 +3,12 @@
  */
 package edu.au.cc.gallery;
 
-public class App {
-    public String getGreeting() {
-        return "Hello Ram.";
-    }
+import edu.au.cc.gallery.tools.UserAdmin;
+import java.util.Scanner;
 
-    public static void main(String[] args) {
-        //System.out.println(new App().getGreeting());
-	S3.demo();
-    }
+public class App {
+
+  public static void main(String[] args) throws Exception {
+      UserAdmin.accessDB();
+  }
 }

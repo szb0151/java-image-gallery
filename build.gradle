@@ -25,6 +25,9 @@ dependencies {
     implementation platform('software.amazon.awssdk:bom:2.13.27')
     implementation 'software.amazon.awssdk:s3'
 
+    // https://mvnrepository.com/artifact/org.postgresql/postgresql
+    implementation group: 'org.postgresql', name: 'postgresql', version: '42.2.12'
+
     // Use JUnit test framework
     testImplementation 'junit:junit:4.12'
 }
@@ -32,4 +35,8 @@ dependencies {
 application {
     // Define the main class for the application.
     mainClassName = 'edu.au.cc.gallery.App'
+}
+
+run {
+   standardInput = System.in
 }
