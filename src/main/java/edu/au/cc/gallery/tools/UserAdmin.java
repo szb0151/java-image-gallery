@@ -109,11 +109,11 @@ public class UserAdmin {
             String username = scanner.nextLine();
 	    User currentUser = new User();
             for (User user : userList) {
-                if (user.getUsername() == username) {
+                if (user.getUsername().equals(username)) {
                         currentUser = user;
                 }
             }
-	    if (currentUser.getUsername() == null) {
+	    if (currentUser  == null) {
 		System.err.println("\nNo such user.");
 		return;
 	    } else {
@@ -121,66 +121,21 @@ public class UserAdmin {
    	    	System.out.print("New password (press enter to keep current)> ");
             	String password = scanner.nextLine();
             	if (password.isEmpty()) {
-               		//	password = currentUser.getPassword();
+               		password = currentUser.getPassword();
             	} else {
-			//	password = currentUser.setPassword(password);
+			currentUser.setPassword(password);
 	    	}
             	System.out.print("New full name (press enter to keep current)> ");
             	String fullName = scanner.nextLine();
             	if (fullName.isEmpty()) {
-               		//fullName = currentUser.getFullName();
+               		fullName = currentUser.getFullName();
             	} else {
-			//fullName = currentUser.setFullName(fullName);
+			currentUser.setFullName(fullName);
 	    	}
 	    	this.execute("update users set password=?, full_name=? where username=?",
                 	new String[] {password, fullName, username});
  	 }
 }
-/*
-  public boolean doesUserExist(String username) throws SQLException {
-	    for (User u : userList) {
-		if (u.getName() == username) {
-			return true;
-		}
- 	    }
-	    return false;
-}
-
-  public String getPassword(String username) throws SQLException {
-	     for (User u : userList) {
-                if (u.getName() == username) {
-                        return u.getPassword();
-                }
-            }
-            return "";
-}
-
-
-String query = String.format("select password from users where username=%s", username);
-	    ResultSet rs = this.execute(query);
-	    if (rs.next()) {
-		return rs.getString(1);
-	    }
-	    return rs.getString(1);
-  }
-
-  public String getFullName(String username) throws SQLException {
-
-	     for (User u : userList) {
-                if (u.getName() == username) {
-                        return u.getFullName();
-                }
-            }
-            return "";
-}
-	    String query = String.format("select full_name from users where username=%s", username);
-            ResultSet rs = this.execute(query);
-	    if (rs.next()) {
-		return rs.getString(1);
-	    }
-	    return rs.getString(1);
-  }
-*/
 
   public void deleteUser() throws SQLException {
 	    System.out.print("Enter username to delete> ");
@@ -196,6 +151,13 @@ String query = String.format("select password from users where username=%s", use
               System.out.println("Please enter 'yes' or 'no'");
               return;
              }
+	    User currentUser = new User();
+	    for (User user : userList) {
+                if (user.getUsername().equals(username)) {
+                        currentUser = user;
+                }
+            }
+	    userList.remove(currentUser);
   }
 
   public static void accessDB() throws SQLException {
