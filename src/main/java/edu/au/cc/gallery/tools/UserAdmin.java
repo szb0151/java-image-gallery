@@ -113,11 +113,7 @@ public class UserAdmin {
                         currentUser = user;
                 }
             }
-	    if (currentUser  == null) {
-		System.err.println("\nNo such user.");
-		return;
-	    } else {
-
+	    if (!currentUser.getUsername().isEmpty()) {
    	    	System.out.print("New password (press enter to keep current)> ");
             	String password = scanner.nextLine();
             	if (password.isEmpty()) {
@@ -136,6 +132,7 @@ public class UserAdmin {
                 	new String[] {password, fullName, username});
  	 }
 }
+
 
   public void deleteUser() throws SQLException {
 	    System.out.print("Enter username to delete> ");
