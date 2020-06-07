@@ -19,7 +19,7 @@ public class UserAdmin {
   private static final String dbUrl = "jdbc:postgresql://database-m2.ckokefrtieqf.us-west-1.rds.amazonaws.com/user_admin";
   private Connection connection;
   private static Scanner scanner = new Scanner(System.in);
-  private List<User> userList = new ArrayList<User>();
+  //private List<User> userList = new ArrayList<User>();
   private String getPassword() {
     try {
       BufferedReader br = new BufferedReader(new FileReader("/home/ec2-user/.sql-passwd"));
@@ -92,9 +92,6 @@ public class UserAdmin {
             System.out.print("Full name> ");
             String fullName = scanner.nextLine();
 
-	    User user = new User(username, password, fullName);
-	    userList.add(user);
-
 	    try {
                 this.execute("insert into users values(?, ?, ?)",
                 new String[] {username, password, fullName});
@@ -107,31 +104,27 @@ public class UserAdmin {
   public void editUser() throws SQLException {
 	    System.out.print("Username to edit> ");
             String username = scanner.nextLine();
-	    User currentUser = new User();
-            for (User user : userList) {
-                if (user.getUsername().equals(username)) {
-                        currentUser = user;
-                }
-            }
-	    if (!currentUser.getUsername().isEmpty()) {
-   	    	System.out.print("New password (press enter to keep current)> ");
+	    String query = String.format("select * from users where username=%s", username);
+		try {
+			this.execute(query);
+		} catch (SQLException ex) {
+			System.err.println("\nNo such user.");
+			return;
+		}
+
+  	    	System.out.print("New password (press enter to keep current)> ");
             	String password = scanner.nextLine();
             	if (password.isEmpty()) {
-               		password = currentUser.getPassword();
-            	} else {
-			currentUser.setPassword(password);
-	    	}
+               		// get old password
+		}
             	System.out.print("New full name (press enter to keep current)> ");
             	String fullName = scanner.nextLine();
             	if (fullName.isEmpty()) {
-               		fullName = currentUser.getFullName();
-            	} else {
-			currentUser.setFullName(fullName);
+			// get old full name
 	    	}
 	    	this.execute("update users set password=?, full_name=? where username=?",
                 	new String[] {password, fullName, username});
- 	 }
-}
+ }
 
 
   public void deleteUser() throws SQLException {
@@ -148,13 +141,14 @@ public class UserAdmin {
               System.out.println("Please enter 'yes' or 'no'");
               return;
              }
-	    User currentUser = new User();
+/*	    User currentUser = new User();
 	    for (User user : userList) {
                 if (user.getUsername().equals(username)) {
                         currentUser = user;
                 }
             }
 	    userList.remove(currentUser);
+*/
   }
 
   public static void accessDB() throws SQLException {
