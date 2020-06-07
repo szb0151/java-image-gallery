@@ -106,24 +106,32 @@ public class UserAdmin {
             String username = scanner.nextLine();
 	    String query = String.format("select * from users where username=%s", username);
 		try {
-			this.execute(query);
+			ResultSet rs = this.execute(query);
+			boolean askPW = true;
+			while (rs.next()) {
+				askPW = rs.getString(1).isEmpty();
+			}
+			if (askPW) {
+				System.out.print("New password (press enter to keep current)> ");
+	                	String password = scanner.nextLine();
+        	        	if (password.isEmpty()) {
+                	       		 password = this.execute("select password from users where username=?", 
+							new String[] {username});
+                		}
+                		System.out.print("New full name (press enter to keep current)> ");
+               		 	String fullName = scanner.nextLine();
+                		if (fullName.isEmpty()) {
+					 fullName = this.execute("select full_name from users where username=?",
+                                                        new String[] {username});
+                		}
+               			this.execute("update users set password=?, full_name=? where username=?",
+                        	new String[] {password, fullName, username});
+			}
 		} catch (SQLException ex) {
 			System.err.println("\nNo such user.");
 			return;
 		}
 
-  	    	System.out.print("New password (press enter to keep current)> ");
-            	String password = scanner.nextLine();
-            	if (password.isEmpty()) {
-               		// get old password
-		}
-            	System.out.print("New full name (press enter to keep current)> ");
-            	String fullName = scanner.nextLine();
-            	if (fullName.isEmpty()) {
-			// get old full name
-	    	}
-	    	this.execute("update users set password=?, full_name=? where username=?",
-                	new String[] {password, fullName, username});
  }
 
 
