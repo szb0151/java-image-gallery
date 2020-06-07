@@ -11,13 +11,15 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 import java.util.Scanner;
-
+import java.util.List;
+import java.util.ArrayList;
 
 public class UserAdmin {
 
   private static final String dbUrl = "jdbc:postgresql://database-m2.ckokefrtieqf.us-west-1.rds.amazonaws.com/user_admin";
   private Connection connection;
-
+  private static Scanner scanner = new Scanner(System.in);
+  private List<User> userList = new ArrayList<User>();
   private String getPassword() {
     try {
       BufferedReader br = new BufferedReader(new FileReader("/home/ec2-user/.sql-passwd"));
@@ -67,8 +69,8 @@ public class UserAdmin {
     System.out.print("Enter command> ");
   }
 
-  public void listUsers(UserAdmin db) throws SQLException {
-    ResultSet rs = db.execute("select username, password, full_name from users");
+  public void listUsers() throws SQLException {
+    ResultSet rs = this.execute("select username, password, full_name from users");
     System.out.println();
     // Establish formatting
     System.out.format("%-15s%-15s%-15s\n", "username", "password", "full name");
@@ -81,10 +83,20 @@ public class UserAdmin {
     rs.close();
   }
 
-  public void addUser(UserAdmin db, String username, String password, String fullName) 
-		throws SQLException {
-	 try {
-                db.execute("insert into users values(?, ?, ?)",
+  public void addUser() throws SQLException {
+
+            System.out.print("Username> ");
+            String username = scanner.nextLine();
+            System.out.print("Password> ");
+            String password = scanner.nextLine();
+            System.out.print("Full name> ");
+            String fullName = scanner.nextLine();
+
+	    User user = new User(username, password, fullName);
+	    userList.add(user);
+
+	    try {
+                this.execute("insert into users values(?, ?, ?)",
                 new String[] {username, password, fullName});
             } catch (SQLException ex) {
                 System.err.println("\nError: user with username " +
@@ -92,17 +104,98 @@ public class UserAdmin {
             }
   }
 
-  public void deleteUser(UserAdmin db, String username, String delete) 
-		throws SQLException {
+  public void editUser() throws SQLException {
+	    System.out.print("Username to edit> ");
+            String username = scanner.nextLine();
+	    User currentUser = new User();
+            for (User user : userList) {
+                if (user.getUsername() == username) {
+                        currentUser = user;
+                }
+            }
+	    if (currentUser.getUsername() == null) {
+		System.err.println("\nNo such user.");
+		return;
+	    } else {
+
+   	    	System.out.print("New password (press enter to keep current)> ");
+            	String password = scanner.nextLine();
+            	if (password.isEmpty()) {
+               		//	password = currentUser.getPassword();
+            	} else {
+			//	password = currentUser.setPassword(password);
+	    	}
+            	System.out.print("New full name (press enter to keep current)> ");
+            	String fullName = scanner.nextLine();
+            	if (fullName.isEmpty()) {
+               		//fullName = currentUser.getFullName();
+            	} else {
+			//fullName = currentUser.setFullName(fullName);
+	    	}
+	    	this.execute("update users set password=?, full_name=? where username=?",
+                	new String[] {password, fullName, username});
+ 	 }
+}
+/*
+  public boolean doesUserExist(String username) throws SQLException {
+	    for (User u : userList) {
+		if (u.getName() == username) {
+			return true;
+		}
+ 	    }
+	    return false;
+}
+
+  public String getPassword(String username) throws SQLException {
+	     for (User u : userList) {
+                if (u.getName() == username) {
+                        return u.getPassword();
+                }
+            }
+            return "";
+}
+
+
+String query = String.format("select password from users where username=%s", username);
+	    ResultSet rs = this.execute(query);
+	    if (rs.next()) {
+		return rs.getString(1);
+	    }
+	    return rs.getString(1);
+  }
+
+  public String getFullName(String username) throws SQLException {
+
+	     for (User u : userList) {
+                if (u.getName() == username) {
+                        return u.getFullName();
+                }
+            }
+            return "";
+}
+	    String query = String.format("select full_name from users where username=%s", username);
+            ResultSet rs = this.execute(query);
+	    if (rs.next()) {
+		return rs.getString(1);
+	    }
+	    return rs.getString(1);
+  }
+*/
+
+  public void deleteUser() throws SQLException {
+	    System.out.print("Enter username to delete> ");
+            String username = scanner.nextLine();
+            System.out.print("Are you sure that you want to delete " + username + "? ");
+            String delete = scanner.nextLine().toLowerCase();
             if (delete.equals("yes")) {
-              db.execute("delete from users where username=?", new String[] {username});
+              this.execute("delete from users where username=?", new String[] {username});
               System.out.println("\nDeleted.");
             } else if (delete.equals("no")) {
               return;
             } else {
               System.out.println("Please enter 'yes' or 'no'");
               return;
-            }
+             }
   }
 
   public static void accessDB() throws SQLException {
@@ -110,10 +203,6 @@ public class UserAdmin {
     db.connect();
 
     int command = -1;
-    Scanner scanner = new Scanner(System.in);
-    String username = "";
-    String password = "";
-    String fullName = "";
 
     while (command != 5) {
       db.printMenu();
@@ -121,56 +210,29 @@ public class UserAdmin {
       scanner.nextLine();
       switch (command) {
           case 1:
-	    // List users
-	    db.listUsers(db);
+
+	    db.listUsers();
             break;
 
           case 2:
-	    // Add user
-	    System.out.print("Username> ");
-            username = scanner.nextLine();
-            System.out.print("Password> ");
-            password = scanner.nextLine();
-            System.out.print("Full name> ");
-            fullName = scanner.nextLine();
 
-	    db.addUser(db, username, password, fullName);
+	    db.addUser();
             break;
 
           case 3:
-	    // Edit user
-		System.out.print("Username to edit> ");
-            	username = scanner.nextLine();
-  	        String fullQuery = "update users";
-            	System.out.print("New password (press enter to keep current)> ");
-            	password = scanner.nextLine();
-	    	if (!password.isEmpty()) {
-	  		fullQuery += " set password=?";
-	    	}
-            	System.out.print("New full name (press enter to keep current)> ");
-            	fullName = scanner.nextLine();
-	    	if (!password.isEmpty() && !fullName.isEmpty()) {
-                	fullQuery += ", full_name=? where username=?";
-            	} else if(password.isEmpty() && !fullName.isEmpty()) {
-			fullQuery += " set full_name=? where username=?";
-	    	}
-	    	db.execute(fullQuery, new String[] {password, fullName, username});
-          	break;
+
+            db.editUser();
+	    break;
 
           case 4:
-	    // Delete user
-            System.out.print("Enter username to delete> ");
-            username = scanner.nextLine();
-	    System.out.print("Are you sure that you want to delete " + username + "? ");
-            String delete = scanner.nextLine().toLowerCase();
 
-	    db.deleteUser(db, username, delete);
+	    db.deleteUser();
             break;
 
           case 5:
             System.out.println("Bye.\n");
             break;
-   
+
           default:
             break;
 
