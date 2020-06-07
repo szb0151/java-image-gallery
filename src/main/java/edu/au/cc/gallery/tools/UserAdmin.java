@@ -43,9 +43,9 @@ public class UserAdmin {
   }
 
   public ResultSet execute(String query) throws SQLException {
-    PreparedStatement stmt = connection.prepareStatement(query);
-    ResultSet rs = stmt.executeQuery();
-    return rs;
+	PreparedStatement stmt = connection.prepareStatement(query);
+    	ResultSet rs = stmt.executeQuery();
+    	return rs;
   }
 
   public void execute(String query, String[] values) throws SQLException {
@@ -104,59 +104,50 @@ public class UserAdmin {
   public void editUser() throws SQLException {
 	    System.out.print("Username to edit> ");
             String username = scanner.nextLine();
-	    String query = String.format("select * from users where username=%s", username);
-		try {
-			ResultSet rs = this.execute(query);
-			boolean askPW = true;
-			while (rs.next()) {
-				askPW = rs.getString(1).isEmpty();
-			}
-			if (askPW) {
-				System.out.print("New password (press enter to keep current)> ");
-	                	String password = scanner.nextLine();
-        	        	if (password.isEmpty()) {
-                	       		 password = this.execute("select password from users where username=?", 
-							new String[] {username});
-                		}
-                		System.out.print("New full name (press enter to keep current)> ");
-               		 	String fullName = scanner.nextLine();
-                		if (fullName.isEmpty()) {
-					 fullName = this.execute("select full_name from users where username=?",
-                                                        new String[] {username});
-                		}
-               			this.execute("update users set password=?, full_name=? where username=?",
-                        	new String[] {password, fullName, username});
-			}
-		} catch (SQLException ex) {
+	    String query = String.format("select * from users where username='%s'", username);
+	    try {
+		ResultSet rs = this.execute(query);
+                while (rs.next()) {
+			System.out.print("New password (press enter to keep current)> ");
+               	 	String password = scanner.nextLine();
+                	if (password.isEmpty()) {
+				password = rs.getString(2);
+                	}
+                	System.out.print("New full name (press enter to keep current)> ");
+                	String fullName = scanner.nextLine();
+                	if (fullName.isEmpty()) {
+				fullName = rs.getString(3);
+                	}
+                	this.execute("update users set password=?, full_name=? where username=?",
+                	new String[] {password, fullName, username});
+		}
+            } catch (SQLException ex) {
 			System.err.println("\nNo such user.");
 			return;
-		}
-
+	    }
  }
 
 
   public void deleteUser() throws SQLException {
 	    System.out.print("Enter username to delete> ");
             String username = scanner.nextLine();
-            System.out.print("Are you sure that you want to delete " + username + "? ");
-            String delete = scanner.nextLine().toLowerCase();
-            if (delete.equals("yes")) {
-              this.execute("delete from users where username=?", new String[] {username});
-              System.out.println("\nDeleted.");
-            } else if (delete.equals("no")) {
-              return;
-            } else {
-              System.out.println("Please enter 'yes' or 'no'");
-              return;
-             }
-/*	    User currentUser = new User();
-	    for (User user : userList) {
-                if (user.getUsername().equals(username)) {
-                        currentUser = user;
-                }
-            }
-	    userList.remove(currentUser);
-*/
+            try {
+                this.execute("select * from users where username=?", new String[] {username});
+	    	System.out.print("Are you sure that you want to delete " + username + "? ");
+           	String delete = scanner.nextLine().toLowerCase();
+            	if (delete.equals("yes")) {
+              	this.execute("delete from users where username=?", new String[] {username});
+              	System.out.println("\nDeleted.");
+            	} else if (delete.equals("no")) {
+              		return;
+            	} else {
+              		System.out.println("Please enter 'yes' or 'no'");
+              		return;
+             	}
+	    } catch (SQLException ex) {
+		System.err.println("\nNo such user.");
+		return;
+	    }
   }
 
   public static void accessDB() throws SQLException {
