@@ -11,15 +11,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 import java.util.Scanner;
-import java.util.List;
-import java.util.ArrayList;
 
 public class UserAdmin {
 
   private static final String dbUrl = "jdbc:postgresql://database-m2.ckokefrtieqf.us-west-1.rds.amazonaws.com/user_admin";
   private Connection connection;
   private static Scanner scanner = new Scanner(System.in);
-  //private List<User> userList = new ArrayList<User>();
   private String getPassword() {
     try {
       BufferedReader br = new BufferedReader(new FileReader("/home/ec2-user/.sql-passwd"));
@@ -123,7 +120,6 @@ public class UserAdmin {
 		}
             } catch (SQLException ex) {
 			System.err.println("\nNo such user.");
-			return;
 	    }
  }
 
@@ -135,10 +131,11 @@ public class UserAdmin {
                 this.execute("select * from users where username=?", new String[] {username});
 	    	System.out.print("Are you sure that you want to delete " + username + "? ");
            	String delete = scanner.nextLine().toLowerCase();
-            	if (delete.equals("yes")) {
+
+            	if (delete.equals("yes") || delete.equals("y")) {
               	this.execute("delete from users where username=?", new String[] {username});
               	System.out.println("\nDeleted.");
-            	} else if (delete.equals("no")) {
+            	} else if (delete.equals("no") || delete.equals("n")) {
               		return;
             	} else {
               		System.out.println("Please enter 'yes' or 'no'");
@@ -146,7 +143,6 @@ public class UserAdmin {
              	}
 	    } catch (SQLException ex) {
 		System.err.println("\nNo such user.");
-		return;
 	    }
   }
 
@@ -182,7 +178,8 @@ public class UserAdmin {
             break;
 
           case 5:
-            System.out.println("Bye.\n");
+
+            System.out.println("\nBye.\n");
             break;
 
           default:
