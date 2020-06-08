@@ -104,6 +104,11 @@ public class UserAdmin {
 	    String query = String.format("select * from users where username='%s'", username);
 	    try {
 		ResultSet rs = this.execute(query);
+		// This if block is to throw the error where rs was not throwing an SQLException
+		if (!rs.isBeforeFirst()) {
+    			System.out.println("\nNo such user.");
+		}
+
                 while (rs.next()) {
 			System.out.print("New password (press enter to keep current)> ");
                	 	String password = scanner.nextLine();
@@ -127,6 +132,16 @@ public class UserAdmin {
   public void deleteUser() throws SQLException {
 	    System.out.print("Enter username to delete> ");
             String username = scanner.nextLine();
+
+		String query = String.format("select * from users where username='%s'", username);
+                ResultSet rs = this.execute(query);
+
+                // This if block is to throw the error where rs was not throwing an SQLException
+                if (!rs.isBeforeFirst()) {
+                        System.out.println("\nNo such user.");
+			return;
+                }
+
             try {
                 this.execute("select * from users where username=?", new String[] {username});
 	    	System.out.print("Are you sure that you want to delete " + username + "? ");
