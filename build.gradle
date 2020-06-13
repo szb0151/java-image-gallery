@@ -24,6 +24,8 @@ dependencies {
     // This dependency is used by the application.
     implementation platform('software.amazon.awssdk:bom:2.13.27')
     implementation 'software.amazon.awssdk:s3'
+    implementation 'software.amazon.awssdk:secretsmanager'
+    implementation group: 'org.json', name: 'json', version: '20200518'
 
     // https://mvnrepository.com/artifact/org.postgresql/postgresql
     implementation group: 'org.postgresql', name: 'postgresql', version: '42.2.12'
