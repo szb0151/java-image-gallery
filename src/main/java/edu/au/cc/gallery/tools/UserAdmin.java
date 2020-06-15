@@ -77,10 +77,10 @@ public class UserAdmin {
     get("/admin", (req,res) -> admin(req, res));
     get("/admin/addUser", (req, res) -> addUserPage(req, res));
     post("/admin/addUser/add", (req, res) -> addUser(req, res));
-    get("/admin/editUser", (req, res) -> editUserPage(req, res));
+    post("/admin/editUser", (req, res) -> editUserPage(req, res));
     post("/admin/editUser/:username/edit", (req, res) -> editUser(req, res));
     get("/admin/deleteUser", (req, res) -> deleteUserPage(req, res));
-    post("/admin/deleteUser/:user", (req, res) -> deleteUser(req, res));
+    post("/admin/deleteUser/:username/edit", (req, res) -> deleteUser(req, res));
 
    }
 
@@ -125,21 +125,22 @@ public class UserAdmin {
 
    public String deleteUserPage(Request req, Response res) {
         Map<String, Object> model = new HashMap<String, Object>();
+	model.put("username", req.params(":username"));
         return new HandlebarsTemplateEngine()
-                .render(new ModelAndView(model, "deleteUser/:user.hbs"));
+                .render(new ModelAndView(model, "deleteUser.hbs"));
     }
 
 
 
    public String deleteUser(Request req, Response res) throws SQLException {
-    UserAdmin.deleteUserInDB(req.params(":user"), req.queryParams("password"), req.queryParams("fullName"));
-    return "Deleted user " + req.params(":user") + "<!DOCTYPE html><html><head><meta charset=\"utf-8\"/></head><body>><p><a href=\"/admin\">Return to Users</a></p></body></html>";
+    UserAdmin.deleteUserInDB(req.params(":username"), req.queryParams("password"), req.queryParams("fullName"));
+    return "Deleted user " + req.params(":username") + "<!DOCTYPE html><html><head><meta charset=\"utf-8\"/></head><body>><p><a href=\"/admin\">Return to Users</a></p></body></html>";
    }
 
   public static void deleteUserInDB(String username, String password, String fullName) throws SQLException{
    UserAdmin db = new UserAdmin();
    db.connect();
-   String query = String.format("select * from users where username='%s'", username);
+   String query = String.format("select password, full_name from users where username='%s'", username);
    ResultSet rs = db.execute(query);
 
    if (!rs.isBeforeFirst()) {
@@ -148,7 +149,7 @@ public class UserAdmin {
    }
 
    try {
-     db.execute("select * from users where username=?", new String[] {username});
+     db.execute("select username, password, full_name from users where username=?", new String[] {username});
      db.execute("delete from users where username=?", new String[] {username});
    } catch (SQLException ex) {
      System.err.println("\nNo such user.");

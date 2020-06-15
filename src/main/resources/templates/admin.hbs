@@ -9,13 +9,13 @@
     <ul>
         {{#each users}}
           <li>
-            <p><a href="/admin/editUser/{{this}}/edit">{{this}}</a><br />
-            -----<a href="/admin/deleteUser/{{this}}">Delete {{this}}</a></p>
+            <p><a href="/admin/editUser/{{this}}/edit">{{this}}</a> <br />
+            -----<a href="/admin/deleteUser/{{this}}/delete">Delete {{this}}</a></p>
             <p></p>
           </li>
         {{/each}}
         <li>
-          <p><a href="/admin/addUser">Add User</a></p>
+          <p><h4><a href="/admin/addUser">Add User</a></h4></p>
         </li>
     </ul>
   </body>
