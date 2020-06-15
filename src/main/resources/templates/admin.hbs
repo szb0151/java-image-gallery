@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Users</title>
+    <meta charset="utf-8"/>
+  </head>
+  <body>
+    <h1>Users:</h1>
+    <ul>
+        {{#each users}}
+          <li>
+            <p><a href="/admin/editUser/{{this}}/edit">{{this}}</a><br />
+            -----<a href="/admin/deleteUser/{{this}}">Delete {{this}}</a></p>
+            <p></p>
+          </li>
+        {{/each}}
+        <li>
+          <p><a href="/admin/addUser">Add User</a></p>
+        </li>
+    </ul>
+  </body>
+</html>
+
