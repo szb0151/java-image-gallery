@@ -54,11 +54,22 @@ public class UserAdmin {
      }
    }
 
-   public ResultSet execute(String query) throws SQLException {
+   public ResultSet executeQuery(String query) throws SQLException {
          PreparedStatement stmt = connection.prepareStatement(query);
          ResultSet rs = stmt.executeQuery();
          return rs;
    }
+
+   
+   public ResultSet executeQuery(String query, String[] values) throws SQLException {
+     PreparedStatement stmt = connection.prepareStatement(query);
+     for (int i = 0; i < values.length; i++) {
+       stmt.setString(i + 1, values[i]);
+     }
+     return stmt.executeQuery();
+    
+   }
+
 
    public void execute(String query, String[] values) throws SQLException {
      PreparedStatement stmt = connection.prepareStatement(query);
@@ -77,10 +88,10 @@ public class UserAdmin {
     get("/admin", (req,res) -> admin(req, res));
     get("/admin/addUser", (req, res) -> addUserPage(req, res));
     post("/admin/addUser/add", (req, res) -> addUser(req, res));
-    post("/admin/editUser", (req, res) -> editUserPage(req, res));
-    post("/admin/editUser/:username/edit", (req, res) -> editUser(req, res));
-    get("/admin/deleteUser", (req, res) -> deleteUserPage(req, res));
-    post("/admin/deleteUser/:username/edit", (req, res) -> deleteUser(req, res));
+    get("/admin/editUser/:username", (req, res) -> editUserPage(req, res));
+    post("/admin/editUser/:username", (req, res) -> editUser(req, res));
+    get("/admin/deleteUser/:username", (req, res) -> deleteUserPage(req, res));
+    post("/admin/deleteUser/:username", (req, res) -> deleteUser(req, res));
 
    }
 
@@ -92,16 +103,22 @@ public class UserAdmin {
    }
 
    public String editUser(Request req, Response res) throws SQLException {
+    if (req.queryParams("password").isEmpty() && req.queryParams("fullName").isEmpty()) {
+      res.redirect("/admin");
+      return "";
+    }
     UserAdmin.updateUserToDB(req.params(":username"), req.queryParams("password"), req.queryParams("fullName"));
-    return "Updated user " + req.params(":username") + "<!DOCTYPE html><html><head><meta charset=\"utf-8\"/></head><body>><p><a href=\"/admin\">Return to Users</a></p></body></html>";
+    return "<!DOCTYPE html><html><head><meta charset=\"utf-8\"/></head><body><p><a href=\"/admin\">Return to Users</a></p>"
+           +  "Updated user " + req.params(":username") + ".</body></html>";
+
    }
 
    public static void updateUserToDB(String username, String password, String fullName) throws SQLException {
     UserAdmin db = new UserAdmin();
     db.connect();
-    String query = String.format("select * from users where username='%s'", username);
+    String query = "select password, full_name from users where username=?";
              try {
-                 ResultSet rs = db.execute(query);
+                 ResultSet rs = db.executeQuery(query, new String[] {username});
                  if (!rs.isBeforeFirst()) {
                          System.out.println("\nNo such user.");
                  }
@@ -133,15 +150,20 @@ public class UserAdmin {
 
 
    public String deleteUser(Request req, Response res) throws SQLException {
+    if (req.queryParams().contains("No")) {
+      res.redirect("/admin");
+      return "";
+    }
     UserAdmin.deleteUserInDB(req.params(":username"), req.queryParams("password"), req.queryParams("fullName"));
-    return "Deleted user " + req.params(":username") + "<!DOCTYPE html><html><head><meta charset=\"utf-8\"/></head><body>><p><a href=\"/admin\">Return to Users</a></p></body></html>";
+    return "<!DOCTYPE html><html><head><meta charset=\"utf-8\"/></head><body><p><a href=\"/admin\">Return to Users</a></p>"
+           +  "Deleted user " + req.params(":username") + ".</body></html>";
    }
 
   public static void deleteUserInDB(String username, String password, String fullName) throws SQLException{
    UserAdmin db = new UserAdmin();
    db.connect();
-   String query = String.format("select password, full_name from users where username='%s'", username);
-   ResultSet rs = db.execute(query);
+   String query = "select password, full_name from users where username=?";
+   ResultSet rs = db.executeQuery(query, new String[] {username});
 
    if (!rs.isBeforeFirst()) {
      System.out.println("\nNo such user.");
@@ -149,16 +171,21 @@ public class UserAdmin {
    }
 
    try {
-     db.execute("select username, password, full_name from users where username=?", new String[] {username});
      db.execute("delete from users where username=?", new String[] {username});
    } catch (SQLException ex) {
      System.err.println("\nNo such user.");
    }
   }
 
-    public String addUser(Request req, Response res) throws SQLException {
-    UserAdmin.addUserToDB(req.queryParams("username"), req.queryParams("password"), req.queryParams("fullName"));
-    return "Added user " + req.queryParams("username") + "<!DOCTYPE html><html><head><meta charset=\"utf-8\"/></head><body><p><a href=\"/admin\">Return to Users</a></p></body></html>";
+   public String addUser(Request req, Response res) throws SQLException {
+    try {
+      UserAdmin.addUserToDB(req.queryParams("username"), req.queryParams("password"), req.queryParams("fullName"));
+      return "<!DOCTYPE html><html><head><meta charset=\"utf-8\"/></head><body><p><a href=\"/admin\">Return to Users</a></p>"
+             + "Added user " + req.queryParams("username") + "</body></html>";
+    } catch (SQLException ex) {
+      return "<!DOCTYPE html><html><head><meta charset=\"utf-8\"/></head><body><p><a href=\"/admin\">Return to Users</a></p>"
+             + req.queryParams("username") + " alread exists.</body></html>";
+   }
    }
 
 
@@ -166,18 +193,14 @@ public class UserAdmin {
         Map<String, Object> model = new HashMap<String, Object>();
         return new HandlebarsTemplateEngine()
                 .render(new ModelAndView(model, "addUser.hbs"));
-    }
+   }
 
 
    public static void addUserToDB(String username, String password, String fullName) throws SQLException {
     UserAdmin db = new UserAdmin();
     db.connect();
-    try {
-     db.execute("insert into users values(?, ?, ?)",
+    db.execute("insert into users values(?, ?, ?)",
                 new String[] {username, password, fullName});
-    } catch (SQLException ex) {
-      System.out.println("Error: user with " + username + " already exists.");
-    }
    }
 
 
@@ -195,7 +218,7 @@ public class UserAdmin {
     UserAdmin db = new UserAdmin();
     db.connect();
     ArrayList<String> users = new ArrayList<String>();
-    ResultSet rs = db.execute("select username from users");
+    ResultSet rs = db.executeQuery("select username from users");
     while(rs.next()) {
         users.add(rs.getString(1));
     }

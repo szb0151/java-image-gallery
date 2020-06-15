@@ -5,6 +5,11 @@
     <meta charset="utf-8"/>
   </head>
   <body>
+    <form action="/admin/deleteUser/{{username}}" method="POST">
+    <p><h2>Are you sure you want to delete <i>{{username}}</i>?</h2></p>
+    <input type="submit" value="Yes" name="Yes" />
+    <input type="submit" value="No" name="No" /> 
+    </form>
   </body>
 </html>
 
