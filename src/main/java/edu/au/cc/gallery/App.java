@@ -14,6 +14,12 @@ import spark.template.handlebars.HandlebarsTemplateEngine;
 public class App {
 
   public static void main(String[] args) throws Exception {
+        String portString = System.getenv("JETTY_PORT");
+	if (portString == null || portString.equals("")) {
+		port(5000);
+	} else {
+		port(Integer.parseInt(portString));
+	}
 
         port(5000);
         UserAdmin db = new UserAdmin();
