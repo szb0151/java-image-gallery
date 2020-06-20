@@ -21,7 +21,6 @@ public class App {
 		port(Integer.parseInt(portString));
 	}
 
-        port(5000);
         UserAdmin db = new UserAdmin();
 
 	db.connect();
