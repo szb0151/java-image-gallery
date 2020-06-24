@@ -1,18 +1,17 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Edit User</title>
+    <title>{{ title }}</title>
     <meta charset="utf-8"/>
   </head>
   <body>
-    <h1>Edit {{username}}:</h1>
-    <form action="/admin/editUser/{{username}}" method="POST">
-      <p><label for="password">Password:</label> 
+    <h1>Edit {{ username }}:</h1>
+    <form action="/admin/editUserExec" method="POST">
+      <p><label for="password">Password:</label>
          <input type="text" name="password" /> </p>
-      <p><label for="fullName">Full Name:</label> 
+      <p><label for="fullName">Full Name:</label>
          <input type="text" name="fullName" /> </p>
       <p><input type="submit" value="Update User" /></p>
     </form>
   </body>
 </html>
-

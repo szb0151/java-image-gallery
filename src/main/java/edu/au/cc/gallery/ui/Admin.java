@@ -53,6 +53,35 @@ public class Admin {
     }
   }
 
+  private String editUser(Request req, Response res) {
+    Map<String, Object> model = new HashMap<>();
+    model.put("title", "Edit User");
+    model.put("username", req.params(":username"));
+    return new HandlebarsTemplateEngine()
+        .render(new ModelAndView(model, "editUser.hbs"));
+  }
+
+  private String editUserExec(Request req, Response res) {
+    try {
+      // get the list of Users
+      for (User u : getUserDAO().getUsers();) {
+        if (u.getUsername().equals(req.params(":username"))) {
+          String password = req.queryParams("password").isEmpty() ?
+                            u.getPassword() : req.queryParams("password");
+          String fullName = req.queryParams("fullName").isEmpty() ?
+                            u.getFullName() : req.queryParams("fullName");
+        }
+      }
+
+      getUserDAO().editUser("update users set password=?, full_name=? where username=?",
+      new String[] {password, fullName, req.params(":username")});
+      res.redirect("/admin");
+      return "";
+    } catch (Exception e) {
+      return "Error: " + e.getMessage();
+    }
+  }
+
   private String deleteUser(Request req, Response res) {
     Map<String, Object> model = new HashMap<>();
     model.put("title", "Delete User");
@@ -77,8 +106,8 @@ public class Admin {
     get("/admin", (req,res) -> getUsers(req, res));
     get("/admin/addUser", (req, res) -> addUser(req, res));
     post("/admin/addUserExec", (req, res) -> addUserExec(req, res));
-    // get("/admin/editUser/:username", (req, res) -> editUserPage(req, res));
-    // post("/admin/editUser/:username", (req, res) -> editUser(req, res));
+    get("/admin/editUser/:username", (req, res) -> editUser(req, res));
+    post("/admin/editUserExec/:username", (req, res) -> editUserExec(req, res));
     get("/admin/deleteUser/:username", (req, res) -> deleteUser(req, res));
     get("/admin/deleteUserExec/:username", (req, res) -> deleteUserExec(req, res));
   }
