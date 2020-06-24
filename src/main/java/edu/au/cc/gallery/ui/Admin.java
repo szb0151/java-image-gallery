@@ -57,8 +57,7 @@ public class Admin {
 
   private String deleteUserExec(Request req, Response res) {
     try {
-      UserDAO dao = getUserDAO();
-      dao.deleteUser(req.params(":username"));
+      getUserDAO().deleteUser(req.params(":username"));
       res.redirect("/admin");
       return "";
     } catch (Exception e) {
@@ -76,7 +75,7 @@ public class Admin {
    // get("/admin/editUser/:username", (req, res) -> editUserPage(req, res));
    // post("/admin/editUser/:username", (req, res) -> editUser(req, res));
    get("/admin/deleteUser/:username", (req, res) -> deleteUser(req, res));
-   post("/admin/deleteUserExec/:username", (req, res) -> deleteUserExec(req, res));
+   get("/admin/deleteUserExec/:username", (req, res) -> deleteUserExec(req, res));
   }
 
 }
