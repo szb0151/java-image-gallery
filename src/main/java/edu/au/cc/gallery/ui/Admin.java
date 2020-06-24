@@ -74,8 +74,7 @@ public class Admin {
                      u.getFullName() : req.queryParams("fullName");
         }
       }
-
-      getUserDAO().editUser(username, password, fullName);
+      getUserDAO().editUser(password, fullName, username);
       res.redirect("/admin");
       return "";
     } catch (Exception e) {
