@@ -37,9 +37,6 @@ public class Admin {
   private String addUser(Request req, Response res) {
     Map<String, Object> model = new HashMap<>();
     model.put("title", "Add User");
-    model.put("username", req.params(":username"));
-    model.put("password", req.params(":password"));
-    model.put("fullName", req.params(":fullName"));
     return new HandlebarsTemplateEngine()
         .render(new ModelAndView(model, "addUser.hbs"));
   }
