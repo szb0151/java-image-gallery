@@ -73,7 +73,7 @@ public class Admin {
         }
       }
 
-      getUserDAO().editUser("update users set password=?, full_name=? where username=?",
+      getUserDAO().executeQuery("update users set password=?, full_name=? where username=?",
       new String[] {password, fullName, req.params(":username")});
       res.redirect("/admin");
       return "";
