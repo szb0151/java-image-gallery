@@ -43,9 +43,9 @@ public class Admin {
 
   private String addUserExec(Request req, Response res) {
     try {
-      getUserDAO().addUser(new User(req.params(":username"),
-                                    req.params(":password"),
-                                    req.params(":fullName")));
+      getUserDAO().addUser(new User(req.queryParams("username"),
+                                    req.queryParams("password"),
+                                    req.queryParams("fullName")));
       res.redirect("/admin");
       return "";
     } catch (Exception e) {
