@@ -1,5 +1,5 @@
 package edu.au.cc.gallery.tools;
-import edu.au.cc.gallery.tools.aws.Secrets;
+import edu.au.cc.gallery.aws.Secrets;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

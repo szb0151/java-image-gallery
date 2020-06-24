@@ -22,11 +22,11 @@ public class Admin {
     return Postgres.getUserDAO();
   }
 
-  private static List<User> getUsers() {
+  private static String getUsers(Request req, Response res) {
     try {
       Map<String, Object> model = new HashMap<>();
       model.put("users", getUserDAO().getUsers());
-      return new HandlebarsTemplateEngine
+      return new HandlebarsTemplateEngine()
           .render(new ModelAndView(model, "admin.hbs"));
     } catch (Exception e) {
       return "Error: " + e.getMessage();
