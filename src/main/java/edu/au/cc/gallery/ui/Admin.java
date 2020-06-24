@@ -34,10 +34,21 @@ public class Admin {
 
   }
 
-  private String addUser(String username, String password, String fullName, Response res) {
+  private String addUser(Request req, Response res) {
+    Map<String, Object> model = new HashMap<>();
+    model.put("title", "Add User");
+    model.put("username", req.params(":username"));
+    model.put("password", req.params(":password"));
+    model.put("fullName", req.params(":fullName"));
+    return new HandlebarsTemplateEngine()
+        .render(new ModelAndView(model, "addUser.hbs"));
+  }
+
+  private String addUserExec(Request req, Response res) {
     try {
-      UserDAO dao = getUserDAO();
-      dao.addUser(new User(username, password, fullName));
+      getUserDAO().addUser(new User(req.params(":username"),
+                                    req.params(":password"),
+                                    req.params(":fullName")));
       res.redirect("/admin");
       return "";
     } catch (Exception e) {
@@ -66,16 +77,13 @@ public class Admin {
   }
 
   public void addRoutes() {
-
     get("/admin", (req,res) -> getUsers(req, res));
-    get("/admin/addUser/:username", (req, res) -> addUser(req.params(":username"),
-                                                          req.params(":password"),
-                                                          req.params(":fullName"),
-                                                          res));
-   // get("/admin/editUser/:username", (req, res) -> editUserPage(req, res));
-   // post("/admin/editUser/:username", (req, res) -> editUser(req, res));
-   get("/admin/deleteUser/:username", (req, res) -> deleteUser(req, res));
-   get("/admin/deleteUserExec/:username", (req, res) -> deleteUserExec(req, res));
+    get("/admin/addUser", (req, res) -> addUser(req, res));
+    post("/admin/addUserExec", (req, res) -> addUserExec(req, res));
+    // get("/admin/editUser/:username", (req, res) -> editUserPage(req, res));
+    // post("/admin/editUser/:username", (req, res) -> editUser(req, res));
+    get("/admin/deleteUser/:username", (req, res) -> deleteUser(req, res));
+    get("/admin/deleteUserExec/:username", (req, res) -> deleteUserExec(req, res));
   }
 
 }
