@@ -22,5 +22,5 @@ public interface UserDAO {
     /*
      * Edit user in the database
      */
-  void editUser(User u) throws Exception;
+  void editUser(String username, String password, String fullName) throws Exception;
 }
