@@ -28,9 +28,9 @@ public class PostgresUserDAO implements UserDAO {
                        new String[] {u.getUsername(), u.getPassword(), u.getFullName()});
   }
 
-  public void editUser(String username) throws SQLException {
+  public void editUser(String username, String password, String fullName) throws SQLException {
     connection.executeQuery("update into users(username, password, full_name) values (?, ?, ?)",
-                       new String[] {username, u.getPassword(), u.getFullName()});
+                       new String[] {username, password, fullName});
   }
 
   public void deleteUser(String username) throws SQLException {

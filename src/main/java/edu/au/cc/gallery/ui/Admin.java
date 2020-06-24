@@ -63,18 +63,19 @@ public class Admin {
 
   private String editUserExec(Request req, Response res) {
     try {
-      // get the list of Users
+      String username = req.params(":username");
+      String password = "";
+      String fullName = "";
       for (User u : getUserDAO().getUsers()) {
-        if (u.getUsername().equals(req.params(":username"))) {
-          String password = req.queryParams("password").isEmpty() ?
-                            u.getPassword() : req.queryParams("password");
-          String fullName = req.queryParams("fullName").isEmpty() ?
-                            u.getFullName() : req.queryParams("fullName");
+        if (u.getUsername().equals(username)) {
+          password = req.queryParams("password").isEmpty() ?
+                     u.getPassword() : req.queryParams("password");
+          fullName = req.queryParams("fullName").isEmpty() ?
+                     u.getFullName() : req.queryParams("fullName");
         }
       }
 
-      getUserDAO().executeQuery("update users set password=?, full_name=? where username=?",
-      new String[] {password, fullName, req.params(":username")});
+      getUserDAO().editUser(username, password, fullName);
       res.redirect("/admin");
       return "";
     } catch (Exception e) {
