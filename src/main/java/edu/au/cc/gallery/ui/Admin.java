@@ -64,7 +64,7 @@ public class Admin {
   private String editUserExec(Request req, Response res) {
     try {
       // get the list of Users
-      for (User u : getUserDAO().getUsers();) {
+      for (User u : getUserDAO().getUsers()) {
         if (u.getUsername().equals(req.params(":username"))) {
           String password = req.queryParams("password").isEmpty() ?
                             u.getPassword() : req.queryParams("password");
