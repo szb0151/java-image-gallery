@@ -108,7 +108,7 @@ public class Admin {
     get("/admin/addUser", (req, res) -> addUser(req, res));
     post("/admin/addUserExec", (req, res) -> addUserExec(req, res));
     get("/admin/editUser/:username", (req, res) -> editUser(req, res));
-    post("/admin/editUserExec/:username", (req, res) -> editUserExec(req, res));
+    post("/admin/editUserExec", (req, res) -> editUserExec(req, res));
     get("/admin/deleteUser/:username", (req, res) -> deleteUser(req, res));
     get("/admin/deleteUserExec/:username", (req, res) -> deleteUserExec(req, res));
   }
