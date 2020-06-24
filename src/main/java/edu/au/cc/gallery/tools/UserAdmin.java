@@ -23,10 +23,6 @@ import spark.Response;
 
 public class UserAdmin {
 
-
-
-
-
    public String editUserPage(Request req, Response res) {
         Map<String, Object> model = new HashMap<String, Object>();
         model.put("username", req.params(":username"));

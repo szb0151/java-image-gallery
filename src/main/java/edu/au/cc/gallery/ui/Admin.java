@@ -18,7 +18,7 @@ import java.util.HashMap;
 
 public class Admin {
 
-  private static UserDAO getUserDAO() {
+  private static UserDAO getUserDAO() throws SQLException {
     return Postgres.getUserDAO();
   }
 
@@ -70,9 +70,9 @@ public class Admin {
 
     get("/admin", (req,res) -> getUsers(req, res));
     get("/admin/addUser/:username", (req, res) -> addUser(req.params(":username"),
-                                                         req.params(":password"),
-                                                         req.params(":fullName"),
-                                                         res));
+                                                          req.params(":password"),
+                                                          req.params(":fullName"),
+                                                          res));
    // get("/admin/editUser/:username", (req, res) -> editUserPage(req, res));
    // post("/admin/editUser/:username", (req, res) -> editUser(req, res));
    get("/admin/deleteUser/:username", (req, res) -> deleteUser(req, res));
