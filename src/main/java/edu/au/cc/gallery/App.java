@@ -13,18 +13,18 @@ import spark.template.handlebars.HandlebarsTemplateEngine;
 
 public class App {
 
+
   public static void main(String[] args) throws Exception {
-        String portString = System.getenv("JETTY_PORT");
-	if (portString == null || portString.equals("")) {
-		port(5000);
-	} else {
-		port(Integer.parseInt(portString));
-	}
+    String portString = System.getenv("JETTY_PORT");
+  	if (portString == null || portString.equals("")) {
+  		port(5000);
+  	} else {
+  		port(Integer.parseInt(portString));
+  	}
 
-        UserAdmin db = new UserAdmin();
+    DB db = new DB();
 
-	db.connect();
-        db.addRoutes();
+    db.connect();
+    db.addRoutes();
   }
 }
-
