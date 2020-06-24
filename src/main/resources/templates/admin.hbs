@@ -7,17 +7,19 @@
   <body>
     <h1>Users:</h1>
     <ul>
-        {{#each users}}
+        {{# users }}
           <li>
-            <p><a href="/admin/editUser/{{this}}">{{this}}</a> <br />
-            -----<a href="/admin/deleteUser/{{this}}">Delete {{this}}</a></p>
+            <p><a href="/admin/editUser/{{username}}">{{username}}</a> <br />
+            -----<a href="/admin/deleteUser/{{username}}">Delete {{username}}</a></p>
             <p></p>
           </li>
-        {{/each}}
+        {{/ users }}
+        {{^ users }}
+        No users
+        {{/ users }}
         <li>
           <p><h4><a href="/admin/addUser">Add User</a></h4></p>
         </li>
     </ul>
   </body>
 </html>
-

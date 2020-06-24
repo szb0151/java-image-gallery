@@ -1,18 +1,20 @@
-package edu.au.cc.gallery;
+package edu.au.cc.gallery.ui;
 
-import edu.au.cc.gallery.tools.Secrets;
-import java.util.Scanner;
 
-import java.util.Map;
-import java.util.HashMap;
 
-import static spark.Spark.*;
-import spark.ModelAndView;
-import spark.template.handlebars.HandlebarsTemplateEngine;
+// import static spark.Spark.*;
+// import spark.Response;
+//
+// import spark.ModelAndView;
+// 
+// import edu.au.cc.gallery.data.Postgres;
+// import edu.au.cc.gallery.data.UserDAO;
+// import edu.au.cc.gallery.data.User;
+//
+// import spark.template.handlebars.HandlebarsTemplateEngine;
 
 
 public class App {
-
 
   public static void main(String[] args) throws Exception {
     String portString = System.getenv("JETTY_PORT");
@@ -22,9 +24,6 @@ public class App {
   		port(Integer.parseInt(portString));
   	}
 
-    DB db = new DB();
-
-    db.connect();
-    db.addRoutes();
+    new Admin().addRoutes();
   }
 }

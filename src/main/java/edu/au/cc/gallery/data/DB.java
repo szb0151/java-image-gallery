@@ -1,4 +1,4 @@
-package edu.au.cc.gallery;
+package edu.au.cc.gallery.data;
 
 import edu.au.cc.gallery.aws.Secrets;
 
@@ -16,16 +16,6 @@ public class DB {
   private static final String dbUrl = "jdbc:postgresql://image-gallery.ckokefrtieqf.us-west-1.rds.amazonaws.com/image_gallery";
   private Connection connection;
 
-
-  private JSONObject getSecret() {
-        String s = Secrets.getSecretImageGallery();
-        return new JSONObject(s);
-  }
-
-  private String getPassword(JSONObject secret) {
-        return secret.getString("password");
-  }
-
   public void connect() throws SQLException {
      try {
        Class.forName("org.postgresql.Driver");
@@ -37,14 +27,22 @@ public class DB {
      }
    }
 
-   public ResultSet executeQuery(String query) throws SQLException {
+  private JSONObject getSecret() {
+        String s = Secrets.getSecretImageGallery();
+        return new JSONObject(s);
+  }
+
+  private String getPassword(JSONObject secret) {
+        return secret.getString("password");
+  }
+
+  public ResultSet executeQuery(String query) throws SQLException {
          PreparedStatement stmt = connection.prepareStatement(query);
          ResultSet rs = stmt.executeQuery();
          return rs;
    }
 
-
-   public ResultSet executeQuery(String query, String[] values) throws SQLException {
+  public ResultSet executeQuery(String query, String[] values) throws SQLException {
      PreparedStatement stmt = connection.prepareStatement(query);
      for (int i = 0; i < values.length; i++) {
        stmt.setString(i + 1, values[i]);

@@ -24,17 +24,7 @@ public class UserAdmin {
 
 
 
-   public void addRoutes() {
 
-    get("/admin", (req,res) -> admin(req, res));
-    get("/admin/addUser", (req, res) -> addUserPage(req, res));
-    post("/admin/addUser/add", (req, res) -> addUser(req, res));
-    get("/admin/editUser/:username", (req, res) -> editUserPage(req, res));
-    post("/admin/editUser/:username", (req, res) -> editUser(req, res));
-    get("/admin/deleteUser/:username", (req, res) -> deleteUserPage(req, res));
-    post("/admin/deleteUser/:username", (req, res) -> deleteUser(req, res));
-
-   }
 
    public String editUserPage(Request req, Response res) {
         Map<String, Object> model = new HashMap<String, Object>();
@@ -83,7 +73,7 @@ public class UserAdmin {
 
    public String deleteUserPage(Request req, Response res) {
         Map<String, Object> model = new HashMap<String, Object>();
-	model.put("username", req.params(":username"));
+	       model.put("username", req.params(":username"));
         return new HandlebarsTemplateEngine()
                 .render(new ModelAndView(model, "deleteUser.hbs"));
     }
@@ -125,7 +115,7 @@ public class UserAdmin {
              + "Added user " + req.queryParams("username") + "</body></html>";
     } catch (SQLException ex) {
       return "<!DOCTYPE html><html><head><meta charset=\"utf-8\"/></head><body><p><a href=\"/admin\">Return to Users</a></p>"
-             + req.queryParams("username") + " alread exists.</body></html>";
+             + req.queryParams("username") + " already exists.</body></html>";
    }
    }
 
@@ -137,12 +127,7 @@ public class UserAdmin {
    }
 
 
-   public static void addUserToDB(String username, String password, String fullName) throws SQLException {
-    DB db = new DB();
-    db.connect();
-    db.execute("insert into users values(?, ?, ?)",
-                new String[] {username, password, fullName});
-   }
+
 
 
 
@@ -155,18 +140,6 @@ public class UserAdmin {
                 .render(new ModelAndView(model, "admin.hbs"));
    }
 
-   public ArrayList getAllUsers() throws SQLException {
-    DB db = new DB();
-    db.connect();
-    ArrayList<String> users = new ArrayList<String>();
-    ResultSet rs = db.executeQuery("select username from users");
-    while(rs.next()) {
-        users.add(rs.getString(1));
-    }
-    rs.close();
-    db.close();
-    return users;
-   }
 
 
 

@@ -1,4 +1,4 @@
-package edu.au.cc.gallery;
+package edu.au.cc.gallery.data;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -22,12 +22,14 @@ public class PostgresUserDAO implements UserDAO {
     return result;
   }
 
-  public User getUserByUsername(String username) throws SQLException {
-    ResultSet rs = connection.executeQuery("select username, password, full_name where username=?",
-                                            new String[] {username});
-    if (rs.next()) {
-      return new User(rs.getString(1), rs.getString(2), rs.getString(3));
-    }
-    return null;
+  public void addUser(User u) throws SQLException {
+    connection.execute("insert into users(username, password, full_name) values (?, ?, ?)",
+                       new String[] {u.getUsername(), u.getPassword(). u.getFullName()});
   }
+
+  public void deleteUser(String username) throws SQLException {
+    connection.execute("delete from users where username=?", new String[] {username});
+  }
+
+
 }
