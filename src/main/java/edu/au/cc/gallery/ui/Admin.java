@@ -18,7 +18,7 @@ import java.util.HashMap;
 
 public class Admin {
 
-  private static UserDAO getUserDAO() throws SQLException {
+  private static UserDAO getUserDAO() throws Exception {
     return Postgres.getUserDAO();
   }
 
