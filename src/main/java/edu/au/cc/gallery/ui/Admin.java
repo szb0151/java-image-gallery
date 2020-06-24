@@ -51,7 +51,7 @@ public class Admin {
     model.put("message", "Are you sure you want to delete this user?");
     model.put("onYes", "/admin/deleteUserExec/" + req.params(":username"));
     model.put("onNo", "/admin");
-    return new HandlebarsTemplateEngine
+    return new HandlebarsTemplateEngine()
         .render(new ModelAndView(model, "confirm.hbs"));
   }
 

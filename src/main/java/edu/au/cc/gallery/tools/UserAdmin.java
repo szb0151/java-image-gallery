@@ -109,16 +109,16 @@ public class UserAdmin {
    }
   }
 
-   public String addUser(Request req, Response res) throws SQLException {
-    try {
-      UserAdmin.addUserToDB(req.queryParams("username"), req.queryParams("password"), req.queryParams("fullName"));
-      return "<!DOCTYPE html><html><head><meta charset=\"utf-8\"/></head><body><p><a href=\"/admin\">Return to Users</a></p>"
-             + "Added user " + req.queryParams("username") + "</body></html>";
-    } catch (SQLException ex) {
-      return "<!DOCTYPE html><html><head><meta charset=\"utf-8\"/></head><body><p><a href=\"/admin\">Return to Users</a></p>"
-             + req.queryParams("username") + " already exists.</body></html>";
-   }
-   }
+   // public String addUser(Request req, Response res) throws SQLException {
+   //  try {
+   //    UserAdmin.addUserToDB(req.queryParams("username"), req.queryParams("password"), req.queryParams("fullName"));
+   //    return "<!DOCTYPE html><html><head><meta charset=\"utf-8\"/></head><body><p><a href=\"/admin\">Return to Users</a></p>"
+   //           + "Added user " + req.queryParams("username") + "</body></html>";
+   //  } catch (SQLException ex) {
+   //    return "<!DOCTYPE html><html><head><meta charset=\"utf-8\"/></head><body><p><a href=\"/admin\">Return to Users</a></p>"
+   //           + req.queryParams("username") + " already exists.</body></html>";
+   // }
+   // }
 
 
    public String addUserPage(Request req, Response res) {
@@ -133,13 +133,13 @@ public class UserAdmin {
 
 
 
-   public String admin(Request req, Response res) throws SQLException {
-    List<String> userList = getAllUsers();
-    Map<String, Object> model = new HashMap<String, Object>();
-    model.put("users", userList);
-    return new HandlebarsTemplateEngine()
-                .render(new ModelAndView(model, "admin.hbs"));
-   }
+   // public String admin(Request req, Response res) throws SQLException {
+   //  List<String> userList = getAllUsers();
+   //  Map<String, Object> model = new HashMap<String, Object>();
+   //  model.put("users", userList);
+   //  return new HandlebarsTemplateEngine()
+   //              .render(new ModelAndView(model, "admin.hbs"));
+   // }
 
 
 
