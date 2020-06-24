@@ -2,6 +2,7 @@ package edu.au.cc.gallery;
 
 import edu.au.cc.gallery.data.Postgres;
 import edu.au.cc.gallery.data.UserDAO;
+import edu.au.cc.gallery.data.DB;
 
 import java.sql.DriverManager;
 import java.sql.Connection;

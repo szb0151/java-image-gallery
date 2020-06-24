@@ -1,5 +1,5 @@
 package edu.au.cc.gallery.tools;
-import edu.au.cc.gallery.tools.Secrets;
+import edu.au.cc.gallery.tools.aws.Secrets;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -223,4 +223,3 @@ public class M2 {
     db.close();
   }
 }
-
