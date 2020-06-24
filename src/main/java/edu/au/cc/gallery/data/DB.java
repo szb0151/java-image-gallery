@@ -1,6 +1,9 @@
 package edu.au.cc.gallery;
 
-import edu.au.cc.gallery.tools.Secrets;
+import edu.au.cc.gallery.aws.Secrets;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.sql.DriverManager;
 import java.sql.Connection;

@@ -1,4 +1,4 @@
-package edu.au.cc.gallery;
+package edu.au.cc.gallery.aws;
 
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
@@ -44,4 +44,3 @@ public class S3 {
   }
 
 }
-

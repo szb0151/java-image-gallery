@@ -1,4 +1,4 @@
-package edu.au.cc.gallery.tools;
+package edu.au.cc.gallery.aws;
 
 import software.amazon.awssdk.regions.Region;
 

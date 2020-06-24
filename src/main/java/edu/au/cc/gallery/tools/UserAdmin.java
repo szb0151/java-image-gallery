@@ -1,19 +1,13 @@
 package edu.au.cc.gallery;
 
-import edu.au.cc.gallery.tools.Secrets;
-
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import edu.au.cc.gallery.data.Postgres;
+import edu.au.cc.gallery.data.UserDAO;
 
 import java.sql.DriverManager;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.util.Map;
 import java.util.HashMap;
