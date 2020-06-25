@@ -70,8 +70,10 @@ public class Admin {
         if (u.getUsername().equals(username)) {
           password = req.queryParams("password").isEmpty() ?
                      u.getPassword() : req.queryParams("password");
+          u.setPassword(password);
           fullName = req.queryParams("fullName").isEmpty() ?
                      u.getFullName() : req.queryParams("fullName");
+          u.setFullName(fullName);
         }
       }
       getUserDAO().editUser(password, fullName, username);
