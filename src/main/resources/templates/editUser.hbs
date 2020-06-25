@@ -6,7 +6,7 @@
   </head>
   <body>
     <h1>Edit {{ username }}:</h1>
-    <form action="/admin/editUserExec" method="POST">
+    <form action="/admin/editUserExec/{{ username }}" method="POST">
       <p><label for="password">Password:</label>
          <input type="text" name="password" /> </p>
       <p><label for="fullName">Full Name:</label>
