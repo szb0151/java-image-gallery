@@ -29,7 +29,7 @@ public class PostgresUserDAO implements UserDAO {
   }
 
   public void editUser(String password, String fullName, String username) throws SQLException {
-    connection.executeQuery("update users set password=?, full_name=? where username=?",
+    connection.execute("update users set password=?, full_name=? where username=?",
                        new String[] {password, fullName, username});
   }
 
