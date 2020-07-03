@@ -10,6 +10,11 @@ public interface UserDAO {
   List<User> getUsers() throws Exception;
 
   /*
+   * @return user with specified username or null if no user
+   */
+  User getUserByUsername(String username) throws Exception;
+
+  /*
    * Add user to the database
    */
   void addUser(User u) throws Exception;
