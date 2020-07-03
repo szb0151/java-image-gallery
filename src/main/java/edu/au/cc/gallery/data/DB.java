@@ -19,8 +19,10 @@ public class DB {
   public void connect() throws SQLException {
      try {
        Class.forName("org.postgresql.Driver");
-       JSONObject secret = getSecret();
-       connection = DriverManager.getConnection(dbUrl, "image_gallery", getPassword(secret));
+       //JSONObject secret = getSecret();
+       String user = System.getenv("IG_USER");
+       String passwd = System.getenv("IG_PASSWD");
+       connection = DriverManager.getConnection(dbUrl, user, passwd);
      } catch (ClassNotFoundException ex) {
        ex.printStackTrace();
        System.exit(1);
