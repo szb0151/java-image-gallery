@@ -13,7 +13,7 @@ import java.sql.ResultSet;
 
 public class DB {
 
-  private static final String dbUrl = "jdbc:postgresql://m5-rds-3.ckokefrtieqf.us-west-1.rds.amazonaws.com/image_gallery";
+  private static final String dbUrl = "jdbc:postgresql://image-gallery.ckokefrtieqf.us-west-1.rds.amazonaws.com/image_gallery";
   private Connection connection;
 
   public void connect() throws SQLException {
