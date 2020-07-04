@@ -13,17 +13,17 @@ import java.sql.ResultSet;
 
 public class DB {
 
-  private static final String dbUrl = buildDbUrl();
+  private static final String dbUrl = "jdbc:postgresql://image-gallery.ckokefrtieqf.us-west-1.rds.amazonaws.com/image_gallery";
   private Connection connection;
 
-  private static String buildDbUrl() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("jdbc:postgresql://");
-    sb.append(System.getenv("PG_HOST"));
-    sb.append("/");
-    sb.append(System.getenv("IG_DATABASE"));
-    return sb.toString();
-  }
+  // private static String buildDbUrl() {
+  //   StringBuilder sb = new StringBuilder();
+  //   sb.append("jdbc:postgresql://");
+  //   sb.append(System.getenv("PG_HOST"));
+  //   sb.append("/");
+  //   sb.append(System.getenv("IG_DATABASE"));
+  //   return sb.toString();
+  // }
 
   public void connect() throws SQLException {
      try {
