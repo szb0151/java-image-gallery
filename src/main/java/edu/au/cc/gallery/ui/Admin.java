@@ -142,7 +142,7 @@ public class Admin {
   public void addRoutes() {
     get("/login", (req,res) -> login(req, res));
     post("/login", (req,res) -> loginPost(req, res));
-    before("/admin/*"), (req,res) -> checkAdmin(req, res));
+    before("/admin/*", (req,res) -> checkAdmin(req, res));
     get("/admin", (req,res) -> getUsers(req, res));
     get("/admin/addUser", (req, res) -> addUser(req, res));
     post("/admin/addUserExec", (req, res) -> addUserExec(req, res));
