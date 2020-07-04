@@ -159,10 +159,10 @@ public class Admin {
 	}
 
   public String uploadImagePost(Request req, Response resp) throws IOException {
-    File uploadDir = new File("upload");
+    File uploadDir = new File("edu.au.cc.ram-image-gallery-config");
     uploadDir.mkdir(); // create the upload directory if it doesn't exist
 
-    staticFiles.externalLocation("upload");
+    staticFiles.externalLocation("edu.au.cc.ram-image-gallery-config");
 
     Path tempFile = Files.createTempFile(uploadDir.toPath(), "", "");
     req.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("/temp"));
