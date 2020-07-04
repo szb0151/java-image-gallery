@@ -158,25 +158,32 @@ public class Admin {
                .render(new ModelAndView(model, "uploadImage.hbs"));
 	}
 
-  public String uploadImagePost(Request req, Response resp) {
+  public String uploadImagePost(Request req, Response resp) throws IOException {
     File uploadDir = new File("upload");
     uploadDir.mkdir(); // create the upload directory if it doesn't exist
-        
+
     Path tempFile = Files.createTempFile(uploadDir.toPath(), "", "");
     req.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("/temp"));
-    String file = req.queryParams("file");
 
-    try (InputStream input = req.raw().getPart(file).getInputStream()) { // getPart needs to use same "name" as input field in form
+    try (InputStream input = req.raw().getPart("uploaded_file").getInputStream()) { // getPart needs to use same "name" as input field in form
       Files.copy(input, tempFile, StandardCopyOption.REPLACE_EXISTING);
+      logInfo(req, tempFile);
+      return "<h1>You uploaded this image:<h1><img src='" + tempFile.getFileName() + "'>";
+    } catch (Exception ex) {
+      return "Error: " + e.getMessage();
     }
-    logInfo(req, tempFile, file);
-    return "<h1>You uploaded this image:<h1><img src='" + tempFile.getFileName() + "'>";
+    
 	}
 
   // methods used for logging
-  private static void logInfo(Request req, Path tempFile, String file) throws IOException, ServletException {
-        System.out.println("Uploaded file '" + getFileName(req.raw().getPart(file)) + "' saved as '"
-                          + tempFile.toAbsolutePath() + "'");
+  private static void logInfo(Request req, Path tempFile) throws IOException, ServletException {
+    try {
+      System.out.println("Uploaded file '" + getFileName(req.raw().getPart("uploaded_file")) + "' saved as '"
+                        + tempFile.toAbsolutePath() + "'");
+    } catch (Exception ex) {
+      return "Error: " + e.getMessage();
+    }
+
   }
 
   private static String getFileName(Part part) {
