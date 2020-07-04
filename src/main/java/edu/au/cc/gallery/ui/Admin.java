@@ -159,9 +159,13 @@ public class Admin {
 	}
 
   public String uploadImagePost(Request req, Response resp) {
+    File uploadDir = new File("upload");
+    uploadDir.mkdir(); // create the upload directory if it doesn't exist
+        
     Path tempFile = Files.createTempFile(uploadDir.toPath(), "", "");
     req.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("/temp"));
     String file = req.queryParams("file");
+
     try (InputStream input = req.raw().getPart(file).getInputStream()) { // getPart needs to use same "name" as input field in form
       Files.copy(input, tempFile, StandardCopyOption.REPLACE_EXISTING);
     }
