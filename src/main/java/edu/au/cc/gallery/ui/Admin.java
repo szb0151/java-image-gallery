@@ -159,10 +159,10 @@ public class Admin {
 	}
 
   public String uploadImagePost(Request req, Response resp) throws IOException {
-    File uploadDir = new File("edu.au.cc.ram-image-gallery-config");
+    File uploadDir = new File("upload");
     uploadDir.mkdir(); // create the upload directory if it doesn't exist
 
-    staticFiles.externalLocation("edu.au.cc.ram-image-gallery-config");
+    staticFiles.externalLocation("upload");
 
     Path tempFile = Files.createTempFile(uploadDir.toPath(), "", "");
     req.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("/temp"));
@@ -171,7 +171,8 @@ public class Admin {
 
       Files.copy(input, tempFile, StandardCopyOption.REPLACE_EXISTING);
       logInfo(req, tempFile);
-      return "<h1>You uploaded this image:<h1><img src='" + tempFile.getFileName() + "'>";
+      res.redirect("/")
+      return "";
 
     } catch (Exception e) {
       return "Error: " + e.getMessage();
