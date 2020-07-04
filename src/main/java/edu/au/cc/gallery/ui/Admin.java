@@ -117,8 +117,8 @@ public class Admin {
       String username = req.queryParams("username");
       User u = getUserDAO().getUserByUsername(username);
       if (u == null || !u.getPassword().equals(req.queryParams("password"))) {
-        req.session().attribute("user", username)
-        res.redirect("/login")
+        req.session().attribute("user", username);
+        res.redirect("/login");
         return "";
       }
       req.session().attribute("user", username);
