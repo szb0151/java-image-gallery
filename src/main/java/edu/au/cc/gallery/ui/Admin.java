@@ -133,10 +133,10 @@ public class Admin {
   }
 
   private String checkAdmin(Request req, Response res) {
-      if (!isAdmin(req.session().attribute("user"))) {
-        res.redirect("/login");
-      }
-      return "";
+    if (!isAdmin(req.session().attribute("user"))) {
+      res.redirect("/login");
+    }
+    return "";
   }
 
   public void addRoutes() {

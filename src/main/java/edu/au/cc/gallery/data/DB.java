@@ -13,16 +13,29 @@ import java.sql.ResultSet;
 
 public class DB {
 
-  private static final String dbUrl = "jdbc:postgresql://image-gallery.ckokefrtieqf.us-west-1.rds.amazonaws.com/image_gallery";
+  private static final String dbUrl = buildDbUrl();
   private Connection connection;
+
+  private static String buildDbUrl() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("jdbc:postgresql://");
+    sb.append(System.getenv("PG_HOST"));
+    sb.append("/");
+    sb.append(System.getenv("IG_DATABASE"));
+    sb.append("?user=");
+    sb.append(System.getenv("IG_USER"));
+    sb.append("?password=");
+    sb.append(System.getenv("IG_PASSWD"));
+    return sb.toString();
+  }
 
   public void connect() throws SQLException {
      try {
        Class.forName("org.postgresql.Driver");
        //JSONObject secret = getSecret();
-       String user = System.getenv("IG_USER");
-       String passwd = System.getenv("IG_PASSWD");
-       connection = DriverManager.getConnection(dbUrl, user, passwd);
+       // String user = System.getenv("IG_USER");
+       // String passwd = System.getenv("IG_PASSWD");
+       connection = DriverManager.getConnection(dbUrl);
      } catch (ClassNotFoundException ex) {
        ex.printStackTrace();
        System.exit(1);

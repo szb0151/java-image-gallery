@@ -2,7 +2,7 @@ FROM ubuntu:latest
 
 #Add ENV variables
 ENV PGDATA=/var/lib/postgresql/data/pgdata
-ENV PG_HOST=0.0.0.0
+ENV PG_HOST=image-gallery.ckokefrtieqf.us-west-1.rds.amazonaws.com
 ENV PG_PORT=5432
 ENV IG_DATABASE=image_gallery
 ENV IG_USER=image_gallery
@@ -17,5 +17,3 @@ COPY build/libs/java-image-gallery-all.jar /app/
 WORKDIR /app
 
 CMD ["java", "-jar", "java-image-gallery-all.jar"]
-
-
