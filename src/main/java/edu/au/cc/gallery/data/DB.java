@@ -22,10 +22,6 @@ public class DB {
     sb.append(System.getenv("PG_HOST"));
     sb.append("/");
     sb.append(System.getenv("IG_DATABASE"));
-    sb.append("?user=");
-    sb.append(System.getenv("IG_USER"));
-    sb.append("?password=");
-    sb.append(System.getenv("IG_PASSWD"));
     return sb.toString();
   }
 
@@ -33,23 +29,23 @@ public class DB {
      try {
        Class.forName("org.postgresql.Driver");
        //JSONObject secret = getSecret();
-       // String user = System.getenv("IG_USER");
-       // String passwd = System.getenv("IG_PASSWD");
-       connection = DriverManager.getConnection(dbUrl);
+       String user = System.getenv("IG_USER");
+       String passwd = System.getenv("IG_PASSWD");
+       connection = DriverManager.getConnection(dbUrl, user, passwd);
      } catch (ClassNotFoundException ex) {
        ex.printStackTrace();
        System.exit(1);
      }
    }
 
-  private JSONObject getSecret() {
-        String s = Secrets.getSecretImageGallery();
-        return new JSONObject(s);
-  }
-
-  private String getPassword(JSONObject secret) {
-        return secret.getString("password");
-  }
+  // private JSONObject getSecret() {
+  //       String s = Secrets.getSecretImageGallery();
+  //       return new JSONObject(s);
+  // }
+  //
+  // private String getPassword(JSONObject secret) {
+  //       return secret.getString("password");
+  // }
 
   public ResultSet executeQuery(String query) throws SQLException {
          PreparedStatement stmt = connection.prepareStatement(query);
