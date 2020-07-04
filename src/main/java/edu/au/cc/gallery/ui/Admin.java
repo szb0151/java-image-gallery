@@ -196,7 +196,7 @@ public class Admin {
                 return cd.substring(cd.indexOf('=') + 1).trim().replace("\"", "");
             }
         }
-        return null;
+        return "";
     }
 
   public void addRoutes() {
