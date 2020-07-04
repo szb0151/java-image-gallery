@@ -27,10 +27,10 @@ public class PostgresUserDAO implements UserDAO {
     ResultSet rs = connection.executeQuery("select username,password,full_name from users where username=?",
                                       new String[] {username});
     while (rs.next()) {
-      User u = new User(rs.getString(1), rs.getString(2), rs.getString(3));
+      return new User(rs.getString(1), rs.getString(2), rs.getString(3));
     }
     rs.close();
-    return u;
+    return null;
   }
 
   public void addUser(User u) throws SQLException {
