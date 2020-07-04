@@ -158,7 +158,7 @@ public class Admin {
                .render(new ModelAndView(model, "uploadImage.hbs"));
 	}
 
-  public String uploadImagePost(Request req, Response resp) throws IOException {
+  public String uploadImagePost(Request req, Response res) throws IOException {
     File uploadDir = new File("upload");
     uploadDir.mkdir(); // create the upload directory if it doesn't exist
 
