@@ -162,6 +162,8 @@ public class Admin {
     File uploadDir = new File("upload");
     uploadDir.mkdir(); // create the upload directory if it doesn't exist
 
+    staticFiles.externalLocation("upload");
+
     Path tempFile = Files.createTempFile(uploadDir.toPath(), "", "");
     req.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("/temp"));
 
