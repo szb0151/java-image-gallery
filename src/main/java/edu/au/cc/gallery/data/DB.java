@@ -26,6 +26,7 @@ public class DB {
     sb.append(System.getenv("IG_USER"));
     sb.append("?password=");
     sb.append(System.getenv("IG_PASSWD"));
+    System.out.println(System.getenv("IG_DATABASE"));
     return sb.toString();
   }
 
