@@ -23,15 +23,14 @@ public class PostgresUserDAO implements UserDAO {
     return result;
   }
 
-  public List<User> getUserByUsername(String username) throws SQLException {
-    List<User> result = new ArrayList<>();
-    ResultSet rs = connection.execute("select username,password,full_name from users where username=?",
-                                             new String[] {username});
+  public User getUserByUsername(String username) throws SQLException {
+    ResultSet rs = connection.executeQuery("select username,password,full_name from users where username=?",
+                                      new String[] {username});
     while (rs.next()) {
-      result.add(new User(rs.getString(1), rs.getString(2), rs.getString(3)));
+      User u = new User(rs.getString(1), rs.getString(2), rs.getString(3));
     }
     rs.close();
-    return result;
+    return u;
   }
 
   public void addUser(User u) throws SQLException {
