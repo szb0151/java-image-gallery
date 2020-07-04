@@ -106,44 +106,51 @@ public class Admin {
     }
   }
 
-  private String login(Request req, Response res) {
-    Map<String, Object> model = new HashMap<>();
+  // private String login(Request req, Response res) {
+  //   Map<String, Object> model = new HashMap<>();
+  //   return new HandlebarsTemplateEngine()
+  //       .render(new ModelAndView(model, "login.hbs"));
+  // }
+  //
+  // private String loginPost(Request req, Response res) {
+  //   try {
+  //     String username = req.queryParams("username");
+  //     User u = getUserDAO().getUserByUsername(username);
+  //     if (u == null || !u.getPassword().equals(req.queryParams("password"))) {
+  //       req.session().attribute("user", username);
+  //       res.redirect("/login");
+  //       return "";
+  //     }
+  //     req.session().attribute("user", username);
+  //     res.redirect("/admin");
+  //     return "";
+  //   } catch (Exception e) {
+  //     return "Error: " + e.getMessage();
+  //   }
+  // }
+  //
+  // private boolean isAdmin(String username) {
+  //   return username != null && username.equals("fred");
+  // }
+  //
+  // private void checkAdmin(Request req, Response res) {
+  //   if (!isAdmin(req.session().attribute("user"))) {
+  //     res.redirect("/login");
+  //     halt();
+  //   }
+  // }
+
+  public String mainMenu(Request req, Response resp) {
+		Map<String, Object> model = new HashMap<String, Object>();
     return new HandlebarsTemplateEngine()
-        .render(new ModelAndView(model, "login.hbs"));
-  }
-
-  private String loginPost(Request req, Response res) {
-    try {
-      String username = req.queryParams("username");
-      User u = getUserDAO().getUserByUsername(username);
-      if (u == null || !u.getPassword().equals(req.queryParams("password"))) {
-        req.session().attribute("user", username);
-        res.redirect("/login");
-        return "";
-      }
-      req.session().attribute("user", username);
-      res.redirect("/admin");
-      return "";
-    } catch (Exception e) {
-      return "Error: " + e.getMessage();
-    }
-  }
-
-  private boolean isAdmin(String username) {
-    return username != null && username.equals("fred");
-  }
-
-  private void checkAdmin(Request req, Response res) {
-    if (!isAdmin(req.session().attribute("user"))) {
-      res.redirect("/login");
-      halt();
-    }
-  }
+               .render(new ModelAndView(model, "mainMenu.hbs"));
+	}
 
   public void addRoutes() {
-    get("/login", (req,res) -> login(req, res));
-    post("/login", (req,res) -> loginPost(req, res));
-    before("/admin/*", (req,res) -> checkAdmin(req, res));
+    get("/", (req, res) -> mainMenu(req, res));
+    // get("/login", (req,res) -> login(req, res));
+    // post("/login", (req,res) -> loginPost(req, res));
+    // before("/admin/*", (req,res) -> checkAdmin(req, res));
     get("/admin", (req,res) -> getUsers(req, res));
     get("/admin/addUser", (req, res) -> addUser(req, res));
     post("/admin/addUserExec", (req, res) -> addUserExec(req, res));
