@@ -26,7 +26,7 @@ public class PostgresUserDAO implements UserDAO {
   public User getUserByUsername(String username) throws SQLException {
     ResultSet rs = connection.executeQuery("select username,password,full_name from users where username=?",
                                       new String[] {username});
-    while (rs.next()) {
+    if (rs.next()) {
       return new User(rs.getString(1), rs.getString(2), rs.getString(3));
     }
     rs.close();

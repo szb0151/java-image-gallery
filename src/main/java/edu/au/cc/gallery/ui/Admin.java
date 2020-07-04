@@ -117,7 +117,8 @@ public class Admin {
       String username = req.queryParams("username");
       User u = getUserDAO().getUserByUsername(username);
       if (u == null || !u.getPassword().equals(req.queryParams("password"))) {
-        res.redirect("/login");
+        req.session().attribute("user", username)
+        res.redirect("/login")
         return "";
       }
       req.session().attribute("user", username);
@@ -132,11 +133,11 @@ public class Admin {
     return username != null && username.equals("fred");
   }
 
-  private String checkAdmin(Request req, Response res) {
+  private void checkAdmin(Request req, Response res) {
     if (!isAdmin(req.session().attribute("user"))) {
       res.redirect("/login");
+      halt();
     }
-    return "";
   }
 
   public void addRoutes() {
