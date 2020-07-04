@@ -1,5 +1,11 @@
 package edu.au.cc.gallery.ui;
 
+
+import spark.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
+import java.io.*;
+import java.nio.file.*;
 import static spark.Spark.*;
 import spark.Request;
 import spark.Response;
