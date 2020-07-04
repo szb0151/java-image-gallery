@@ -46,7 +46,7 @@ public class Admin {
       getUserDAO().addUser(new User(req.queryParams("username"),
                                     req.queryParams("password"),
                                     req.queryParams("fullName")));
-      res.redirect("/admin");
+      res.redirect("/admin/users");
       return "";
     } catch (Exception e) {
       return "Error: " + e.getMessage();
@@ -79,7 +79,7 @@ public class Admin {
       }
 
       getUserDAO().editUser(password, fullName, username);
-      res.redirect("/admin");
+      res.redirect("/admin/users");
       return "";
     } catch (Exception e) {
       return "Error: " + e.getMessage();
@@ -91,7 +91,7 @@ public class Admin {
     model.put("title", "Delete User");
     model.put("message", "Are you sure you want to delete this user?");
     model.put("onYes", "/admin/deleteUserExec/" + req.params(":username"));
-    model.put("onNo", "/admin");
+    model.put("onNo", "/admin/users");
     return new HandlebarsTemplateEngine()
         .render(new ModelAndView(model, "confirm.hbs"));
   }
@@ -99,7 +99,7 @@ public class Admin {
   private String deleteUserExec(Request req, Response res) {
     try {
       getUserDAO().deleteUser(req.params(":username"));
-      res.redirect("/admin");
+      res.redirect("/admin/users");
       return "";
     } catch (Exception e) {
       return "Error: " + e.getMessage();
@@ -122,7 +122,7 @@ public class Admin {
         return "";
       }
       req.session().attribute("user", username);
-      res.redirect("/admin");
+      res.redirect("/admin/users");
       return "";
     } catch (Exception e) {
       return "Error: " + e.getMessage();
@@ -151,7 +151,7 @@ public class Admin {
     get("/login", (req,res) -> login(req, res));
     post("/login", (req,res) -> loginPost(req, res));
     before("/admin/*", (req,res) -> checkAdmin(req, res));
-    get("/admin", (req,res) -> getUsers(req, res));
+    get("/admin/users", (req,res) -> getUsers(req, res));
     get("/admin/addUser", (req, res) -> addUser(req, res));
     post("/admin/addUserExec", (req, res) -> addUserExec(req, res));
     get("/admin/editUser/:username", (req, res) -> editUser(req, res));
