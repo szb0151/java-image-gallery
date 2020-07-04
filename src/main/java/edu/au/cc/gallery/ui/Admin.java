@@ -122,7 +122,7 @@ public class Admin {
         return "";
       }
       req.session().attribute("user", username);
-      res.redirect("/admin/users");
+      res.redirect("/");
       return "";
     } catch (Exception e) {
       return "Error: " + e.getMessage();
@@ -146,18 +146,52 @@ public class Admin {
                .render(new ModelAndView(model, "mainMenu.hbs"));
 	}
 
+  public String uploadImage(Request req, Response resp) {
+		Map<String, Object> model = new HashMap<String, Object>();
+    return new HandlebarsTemplateEngine()
+               .render(new ModelAndView(model, "uploadImage.hbs"));
+	}
+
+  public String uploadImagePost(Request req, Response resp) {
+    Path tempFile = Files.createTempFile(uploadDir.toPath(), "", "");
+    req.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("/temp"));
+    String file = req.queryParams("file");
+    try (InputStream input = req.raw().getPart(file).getInputStream()) { // getPart needs to use same "name" as input field in form
+      Files.copy(input, tempFile, StandardCopyOption.REPLACE_EXISTING);
+    }
+    logInfo(req, tempFile, file);
+    return "<h1>You uploaded this image:<h1><img src='" + tempFile.getFileName() + "'>";
+	}
+
+  // methods used for logging
+  private static void logInfo(Request req, Path tempFile, String file) throws IOException, ServletException {
+        System.out.println("Uploaded file '" + getFileName(req.raw().getPart(file)) + "' saved as '"
+                          + tempFile.toAbsolutePath() + "'");
+  }
+
+  private static String getFileName(Part part) {
+        for (String cd : part.getHeader("content-disposition").split(";")) {
+            if (cd.trim().startsWith("filename")) {
+                return cd.substring(cd.indexOf('=') + 1).trim().replace("\"", "");
+            }
+        }
+        return null;
+    }
+
   public void addRoutes() {
     get("/", (req, res) -> mainMenu(req, res));
-    get("/login", (req,res) -> login(req, res));
-    post("/login", (req,res) -> loginPost(req, res));
-    before("/admin/*", (req,res) -> checkAdmin(req, res));
-    get("/admin/users", (req,res) -> getUsers(req, res));
+    get("/login", (req, res) -> login(req, res));
+    post("/login", (req, res) -> loginPost(req, res));
+    before("/admin/*", (req, res) -> checkAdmin(req, res));
+    get("/admin/users", (req, res) -> getUsers(req, res));
     get("/admin/addUser", (req, res) -> addUser(req, res));
     post("/admin/addUserExec", (req, res) -> addUserExec(req, res));
     get("/admin/editUser/:username", (req, res) -> editUser(req, res));
     post("/admin/editUserExec/:username", (req, res) -> editUserExec(req, res));
     get("/admin/deleteUser/:username", (req, res) -> deleteUser(req, res));
     get("/admin/deleteUserExec/:username", (req, res) -> deleteUserExec(req, res));
+    get("/admin/uploadImage", (req, res) -> uploadImage(req, res));
+    post("/admin/uploadImage", (req, res) -> uploadImagePost(req, res));
   }
 
 }
