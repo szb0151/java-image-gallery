@@ -171,7 +171,7 @@ public class Admin {
 
       Files.copy(input, tempFile, StandardCopyOption.REPLACE_EXISTING);
       logInfo(req, tempFile);
-      res.redirect("/")
+      res.redirect("/");
       return "";
 
     } catch (Exception e) {
