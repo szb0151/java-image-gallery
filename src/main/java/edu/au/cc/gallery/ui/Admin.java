@@ -166,13 +166,14 @@ public class Admin {
     req.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("/temp"));
 
     try (InputStream input = req.raw().getPart("uploaded_file").getInputStream()) { // getPart needs to use same "name" as input field in form
+
       Files.copy(input, tempFile, StandardCopyOption.REPLACE_EXISTING);
       logInfo(req, tempFile);
       return "<h1>You uploaded this image:<h1><img src='" + tempFile.getFileName() + "'>";
-    } catch (Exception ex) {
+
+    } catch (Exception e) {
       return "Error: " + e.getMessage();
     }
-    
 	}
 
   // methods used for logging
@@ -180,8 +181,8 @@ public class Admin {
     try {
       System.out.println("Uploaded file '" + getFileName(req.raw().getPart("uploaded_file")) + "' saved as '"
                         + tempFile.toAbsolutePath() + "'");
-    } catch (Exception ex) {
-      return "Error: " + e.getMessage();
+    } catch (Exception e) {
+      System.err.println("Error: " + e.getMessage());
     }
 
   }
