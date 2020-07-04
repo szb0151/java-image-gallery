@@ -28,24 +28,24 @@ public class DB {
   public void connect() throws SQLException {
      try {
        Class.forName("org.postgresql.Driver");
-       //JSONObject secret = getSecret();
+       JSONObject secret = getSecret();
        String user = System.getenv("IG_USER");
        String passwd = System.getenv("IG_PASSWD");
-       connection = DriverManager.getConnection(dbUrl, user, passwd);
+       connection = DriverManager.getConnection(dbUrl, "image_gallery", getPassword(secret));
      } catch (ClassNotFoundException ex) {
        ex.printStackTrace();
        System.exit(1);
      }
    }
 
-  // private JSONObject getSecret() {
-  //       String s = Secrets.getSecretImageGallery();
-  //       return new JSONObject(s);
-  // }
-  //
-  // private String getPassword(JSONObject secret) {
-  //       return secret.getString("password");
-  // }
+  private JSONObject getSecret() {
+        String s = Secrets.getSecretImageGallery();
+        return new JSONObject(s);
+  }
+
+  private String getPassword(JSONObject secret) {
+        return secret.getString("password");
+  }
 
   public ResultSet executeQuery(String query) throws SQLException {
          PreparedStatement stmt = connection.prepareStatement(query);
