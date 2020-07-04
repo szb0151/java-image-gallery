@@ -151,7 +151,7 @@ public class Admin {
     get("/login", (req,res) -> login(req, res));
     post("/login", (req,res) -> loginPost(req, res));
     before("/admin/*", (req,res) -> checkAdmin(req, res));
-    get("/admin/users", (req,res) -> getUsers(req, res));
+    get("/admin", (req,res) -> getUsers(req, res));
     get("/admin/addUser", (req, res) -> addUser(req, res));
     post("/admin/addUserExec", (req, res) -> addUserExec(req, res));
     get("/admin/editUser/:username", (req, res) -> editUser(req, res));
