@@ -1,0 +1,50 @@
+---
+version: "3.8"
+
+services:
+
+  image_gallery:
+    image: "szb0151/image_gallery"
+    environment:
+      PG_HOST: "database"
+      IG_USER: "image_gallery"
+      IG_PASSWD_FILE: "/run/secrets/ig_password"
+      IG_DATABASE: "image_gallery"
+      S3_IMAGE_BUCKET: "edu.au.cc.ram-image-gallery-config"
+      ports:
+        - "8888:5000"
+    secrets:
+      - ig_password
+    deploy:
+      replicas: 2
+      placement:
+        constraints:
+          - node.role==manager
+    depends_on:
+      - "database"
+    environment:
+      REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY: /mnt/efs/postgres-data
+    volumes:
+      - "/mnt/efs/postgres-data:/var/lib/postgresql/data"
+
+  database:
+    image: postgres:11
+    environment:
+      POSTGRES_PASSWORD: "/run/secrets/ig_password"
+      POSTGRES_USER: image_gallery
+      POSTGRES_DB: image_gallery
+      PGDATA: "/var/lib/postgresql/data/pgdata"
+    secrets:
+      - ig_password
+    deploy:
+      mode: "replicated"
+      replicas: 1
+    volumes:
+      - "/mnt/efs/postgres-data:/var/lib/postgresql/data"
+
+volumes:
+  image-gallery-postgres:
+
+secrets:
+  ig_password:
+    external: true
