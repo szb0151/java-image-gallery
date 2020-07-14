@@ -1,13 +1,12 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Main Menu</title>
+    <title>{{ title }}</title>
     <meta charset="utf-8" />
   </head>
   <body>
-    <h1>Main Menu:</h1>
-      <p><a href="/admin/viewImages">View Images</a></p>
-      <p><a href="/admin/uploadImage">Upload Image</a></p>
+    <h1>{{ title }} for <u>{{ username }}</u>:</h1>
+      <p><a href="/{{ username }}/userHome">View/Upload Images</a></p>
       <p><a href="/admin/users">View Users</a> (Admin only)</p>
     </body>
 </html>

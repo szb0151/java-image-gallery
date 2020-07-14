@@ -24,11 +24,6 @@ public class Secrets {
 				  .region(region)
 				  .build();
 
-    /*
-    AWSSecretsManager client  = AWSSecretsManagerClientBuilder.standard()
-                                    .withRegion(region)
-                                    .build();
-    */
     // In this sample we only handle the specific exceptions for the 'GetSecretValue' API.
     // See https://docs.aws.amazon.com/secretsmanager/latest/apireference/API_GetSecretValue.html
     // We rethrow the exception by default.
@@ -36,7 +31,7 @@ public class Secrets {
     String secret, decodedBinarySecret;
     GetSecretValueRequest getSecretValueRequest = GetSecretValueRequest.builder()
                     .secretId(secretName)
-		    .build();
+		                .build();
     GetSecretValueResponse getSecretValueResult = null;
 
     try {

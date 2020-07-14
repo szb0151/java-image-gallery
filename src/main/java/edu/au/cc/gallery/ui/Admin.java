@@ -1,6 +1,28 @@
 package edu.au.cc.gallery.ui;
 
 
+import com.amazonaws.AmazonServiceException;
+import com.amazonaws.SdkClientException;
+import com.amazonaws.regions.Regions;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
+
+import java.io.File;
+import java.io.IOException;
+
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
+import org.apache.commons.io.IOUtils;
+
 import spark.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -24,7 +46,7 @@ import java.util.HashMap;
 
 public class Admin {
 
-  private static UserDAO getUserDAO() throws Exception {
+  public static UserDAO getUserDAO() throws Exception {
     return Postgres.getUserDAO();
   }
 
@@ -114,69 +136,46 @@ public class Admin {
 
   private String login(Request req, Response res) {
     Map<String, Object> model = new HashMap<>();
+    model.put("username", req.params(":username"));
     return new HandlebarsTemplateEngine()
         .render(new ModelAndView(model, "login.hbs"));
   }
 
-  private String loginPost(Request req, Response res) {
+  private String loginExec(Request req, Response res) {
     try {
       String username = req.queryParams("username");
       User u = getUserDAO().getUserByUsername(username);
       if (u == null || !u.getPassword().equals(req.queryParams("password"))) {
-        req.session().attribute("user", username);
+        req.session().attribute("username", username);
         res.redirect("/login");
         return "";
       }
-      req.session().attribute("user", username);
+      req.session().attribute("username", username);
       res.redirect("/");
       return "";
+
     } catch (Exception e) {
       return "Error: " + e.getMessage();
     }
   }
 
   private boolean isAdmin(String username) {
-    return username != null && username.equals("fred");
+    return username != null && (username.equals("dongji") || username.equals("fred"));
   }
 
   private void checkAdmin(Request req, Response res) {
-    if (!isAdmin(req.session().attribute("user"))) {
+    if (!isAdmin(req.session().attribute("username"))) {
       res.redirect("/login");
       halt();
     }
   }
 
-  public String mainMenu(Request req, Response resp) {
+  private String mainMenu(Request req, Response res) {
 		Map<String, Object> model = new HashMap<String, Object>();
+    model.put("title", "Main Menu");
+    model.put("username", req.session().attribute("username"));
     return new HandlebarsTemplateEngine()
                .render(new ModelAndView(model, "mainMenu.hbs"));
-	}
-
-  public String uploadImage(Request req, Response resp) {
-		Map<String, Object> model = new HashMap<String, Object>();
-    return new HandlebarsTemplateEngine()
-               .render(new ModelAndView(model, "uploadImage.hbs"));
-	}
-
-  public String uploadImagePost(Request req, Response res) throws IOException {
-    File uploadDir = new File("upload");
-    uploadDir.mkdir(); // create the upload directory if it doesn't exist
-
-    staticFiles.externalLocation("upload");
-
-    Path tempFile = Files.createTempFile(uploadDir.toPath(), "", "");
-    req.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("/temp"));
-
-    try (InputStream input = req.raw().getPart("uploaded_file").getInputStream()) { // getPart needs to use same "name" as input field in form
-
-      Files.copy(input, tempFile, StandardCopyOption.REPLACE_EXISTING);
-      logInfo(req, tempFile);
-      res.redirect("/");
-      return "";
-
-    } catch (Exception e) {
-      return "Error: " + e.getMessage();
-    }
 	}
 
   // methods used for logging
@@ -191,19 +190,19 @@ public class Admin {
   }
 
   private static String getFileName(Part part) {
-        for (String cd : part.getHeader("content-disposition").split(";")) {
-            if (cd.trim().startsWith("filename")) {
-                return cd.substring(cd.indexOf('=') + 1).trim().replace("\"", "");
-            }
-        }
-        return "";
+    for (String cd : part.getHeader("content-disposition").split(";")) {
+      if (cd.trim().startsWith("filename")) {
+          return cd.substring(cd.indexOf('=') + 1).trim().replace("\"", "");
+      }
     }
+    return "";
+  }
 
   public void addRoutes() {
     get("/", (req, res) -> mainMenu(req, res));
     get("/login", (req, res) -> login(req, res));
-    post("/login", (req, res) -> loginPost(req, res));
-    before("/admin/*", (req, res) -> checkAdmin(req, res));
+    post("/loginExec", (req, res) -> loginExec(req, res));
+    //before("/admin/*", (req, res) -> checkAdmin(req, res));
     get("/admin/users", (req, res) -> getUsers(req, res));
     get("/admin/addUser", (req, res) -> addUser(req, res));
     post("/admin/addUserExec", (req, res) -> addUserExec(req, res));
@@ -211,8 +210,6 @@ public class Admin {
     post("/admin/editUserExec/:username", (req, res) -> editUserExec(req, res));
     get("/admin/deleteUser/:username", (req, res) -> deleteUser(req, res));
     get("/admin/deleteUserExec/:username", (req, res) -> deleteUserExec(req, res));
-    get("/admin/uploadImage", (req, res) -> uploadImage(req, res));
-    post("/admin/uploadImage", (req, res) -> uploadImagePost(req, res));
   }
 
 }

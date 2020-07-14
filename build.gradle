@@ -25,16 +25,22 @@ repositories {
 
 dependencies {
     // This dependency is used by the application.
+    // was 2.13.27
     implementation platform('software.amazon.awssdk:bom:2.13.27')
     implementation 'software.amazon.awssdk:s3'
     implementation 'software.amazon.awssdk:secretsmanager'
     implementation group: 'org.json', name: 'json', version: '20200518'
 
+    // was 1.8.7
+    implementation group: 'com.amazonaws', name: 'aws-java-sdk', version: '1.8.7'
+    // was 1.11.0
+    implementation group: 'com.amazonaws', name: 'amazon-kinesis-client', version: '1.11.0'
+    implementation group: 'commons-io', name: 'commons-io', version: '2.4'
+
     implementation group: 'com.sparkjava', name: 'spark-core', version: '2.8.0'
     implementation group: 'com.sparkjava', name: 'spark-template-handlebars', version: '2.7.1'
 
     implementation group: 'org.slf4j', name: 'slf4j-simple', version:'1.7.21'
-    //compile 'org.slf4j:slf4j-nop:1.7.25'
 
    // https://mvnrepository.com/artifact/org.postgresql/postgresql
     implementation group: 'org.postgresql', name: 'postgresql', version: '42.2.12'
@@ -48,7 +54,6 @@ application {
     mainClassName = 'edu.au.cc.gallery.ui.App'
 }
 
-
 jar {
     manifest {
       attributes(
@@ -57,7 +62,6 @@ jar {
       )
     }
 }
-
 
 run {
    standardInput = System.in

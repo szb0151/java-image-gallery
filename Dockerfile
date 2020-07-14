@@ -5,9 +5,8 @@ ENV PGDATA=/var/lib/postgresql/data/pgdata
 ENV PG_HOST=image-gallery.ckokefrtieqf.us-west-1.rds.amazonaws.com
 ENV PG_PORT=5432
 ENV IG_DATABASE=image_gallery
-ENV IG_USER=postgres
-ENV IG_PASSWD=b2nuF_KXRH{A`JodY=-;vkP[sIo&`h92
-ENV IG_PASSWD_FILE=/mnt/secrets/postgres_passwd
+ENV IG_USER=image_gallery
+ENV IG_PASSWD='6pbs(y*TtZ|h,d*E$10qW.sb06*.#^`h'
 ENV S3_IMAGE_BUCKET=edu.au.cc.ram-image-gallery-config
 
 ARG DEBIAN_FRONTEND=noninteractive

@@ -13,25 +13,41 @@ import java.sql.ResultSet;
 
 public class DB {
 
-  private static final String dbUrl = "jdbc:postgresql://image-gallery.ckokefrtieqf.us-west-1.rds.amazonaws.com/image_gallery";
   private Connection connection;
+  private static String pg_host;
+  private static String ig_user;
+  private static String ig_password;
 
-  // private static String buildDbUrl() {
-  //   StringBuilder sb = new StringBuilder();
-  //   sb.append("jdbc:postgresql://");
-  //   sb.append(System.getenv("PG_HOST"));
-  //   sb.append("/");
-  //   sb.append(System.getenv("IG_DATABASE"));
-  //   return sb.toString();
-  // }
+  private static String getHostname() {
+    return pg_host;
+  }
+
+  public static void setHostname(String host, String pg_port, String ig_database) {
+    pg_host = "jdbc:postgresql://" + host + ":" + pg_port + "/" + ig_database;
+  }
+
+  private static String getIg_user() {
+    return ig_user;
+  }
+
+  public static void setIg_user(String iguser) {
+    ig_user = iguser;
+  }
+
+  private static String getIg_password() {
+    return ig_password;
+  }
+
+  public static void setIg_password(String igpassword) {
+    ig_password = igpassword;
+  }
 
   public void connect() throws SQLException {
      try {
        Class.forName("org.postgresql.Driver");
-       JSONObject secret = getSecret();
-       String user = System.getenv("IG_USER");
-       String passwd = System.getenv("IG_PASSWD");
-       connection = DriverManager.getConnection(dbUrl, "image_gallery", getPassword(secret));
+       // JSONObject secret = getSecret();
+       connection = DriverManager.getConnection(getHostname(), getIg_user(), getIg_password());
+
      } catch (ClassNotFoundException ex) {
        ex.printStackTrace();
        System.exit(1);

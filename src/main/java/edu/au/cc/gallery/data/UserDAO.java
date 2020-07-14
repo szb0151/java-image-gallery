@@ -19,13 +19,29 @@ public interface UserDAO {
    */
   void addUser(User u) throws Exception;
 
-   /*
-    * Delete user from the database
-    */
+  /*
+   * Delete user from the database
+   */
   void deleteUser(String username) throws Exception;
 
-    /*
-     * Edit user in the database
-     */
+  /*
+   * Edit user in the database
+   */
   void editUser(String password, String fullName, String username) throws Exception;
+
+  /*
+   * Add an image for a user into the database
+   */
+  void addImage(User u, Image i) throws Exception;
+
+  /*
+   * Returns the list of all images for specified user
+   */
+  List<String> getImageIds(User u) throws Exception;
+
+  /*
+   * Deletes an image for a specified user
+   */
+  void deleteImage(User u, Image i) throws Exception;
+
 }
