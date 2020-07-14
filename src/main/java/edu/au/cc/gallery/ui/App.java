@@ -60,6 +60,7 @@ public class App {
     try {
       BufferedReader br = new BufferedReader(new FileReader(passFile));
       String result = br.readLine();
+      System.out.println(result);
       br.close();
       return result;
     } catch (Exception e) {
